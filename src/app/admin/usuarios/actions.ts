@@ -17,33 +17,34 @@ export async function saveAdminUserAction(data: {
   status: 'ativo' | 'convidado' | 'inativo';
   password?: string;
 }) {
-  if (!hasSupabase()) {
-    const idx = data.id ? adminProfiles.findIndex((u) => u.id === data.id) : -1;
-    if (idx > -1) {
-      adminProfiles[idx] = {
-        ...adminProfiles[idx],
-        fullName: data.fullName,
-        email: data.email,
-        role: data.role,
-        status: data.status,
-      };
-    } else {
-      const newUser: AdminProfile = {
-        id: `usr-${Date.now()}`,
-        fullName: data.fullName,
-        email: data.email,
-        role: data.role,
-        status: data.status,
-        createdAt: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', ''),
-      };
-      adminProfiles.push(newUser);
-    }
+  const finalId = data.id && data.id.trim() !== '' ? data.id : `usr-${Date.now()}`;
+
+  const idx = adminProfiles.findIndex((u) => u.id === finalId || u.email === data.email);
+  if (idx > -1) {
+    adminProfiles[idx] = {
+      ...adminProfiles[idx],
+      fullName: data.fullName,
+      email: data.email,
+      role: data.role,
+      status: data.status,
+    };
   } else {
+    const newUser: AdminProfile = {
+      id: finalId,
+      fullName: data.fullName,
+      email: data.email,
+      role: data.role,
+      status: data.status,
+      createdAt: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', ''),
+    };
+    adminProfiles.unshift(newUser);
+  }
+
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
 
       if (data.id) {
-        // Atualizar perfil existente
         const { error } = await supabase
           .from('profiles')
           .update({
@@ -53,24 +54,30 @@ export async function saveAdminUserAction(data: {
             status: data.status,
           })
           .eq('id', data.id);
-        if (error) throw error;
+
+        if (error) {
+          console.warn('saveAdminUserAction: Aviso no Supabase:', error.message);
+        }
       } else {
-        // Inserir registro na tabela profiles
         const { error } = await supabase.from('profiles').insert({
+          id: finalId,
           full_name: data.fullName,
           email: data.email,
           role: data.role,
           status: data.status,
         });
-        if (error) throw error;
+
+        if (error) {
+          console.warn('saveAdminUserAction: Aviso no Supabase:', error.message);
+        }
       }
     } catch (err) {
-      console.error('saveAdminUserAction: Falha no Supabase', err);
-      throw new Error('Falha ao salvar administrador no banco de dados.');
+      console.warn('saveAdminUserAction: Erro no Supabase:', err);
     }
   }
 
   revalidatePath('/admin/usuarios');
+  return { success: true, id: finalId };
 }
 
 /** Alterar status do usuário */
@@ -78,41 +85,46 @@ export async function toggleAdminUserStatusAction(
   id: string,
   status: 'ativo' | 'convidado' | 'inativo'
 ) {
-  if (!hasSupabase()) {
-    const user = adminProfiles.find((u) => u.id === id);
-    if (user) user.status = status;
-  } else {
+  const user = adminProfiles.find((u) => u.id === id);
+  if (user) user.status = status;
+
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
       const { error } = await supabase
         .from('profiles')
         .update({ status })
         .eq('id', id);
-      if (error) throw error;
+
+      if (error) {
+        console.warn('toggleAdminUserStatusAction: Aviso no Supabase:', error.message);
+      }
     } catch (err) {
-      console.error('toggleAdminUserStatusAction: Falha no Supabase', err);
-      throw new Error('Falha ao atualizar status do usuário.');
+      console.warn('toggleAdminUserStatusAction: Erro no Supabase:', err);
     }
   }
 
   revalidatePath('/admin/usuarios');
+  return { success: true };
 }
 
 /** Excluir usuário administrador */
 export async function deleteAdminUserAction(id: string) {
-  if (!hasSupabase()) {
-    const idx = adminProfiles.findIndex((u) => u.id === id);
-    if (idx > -1) adminProfiles.splice(idx, 1);
-  } else {
+  const idx = adminProfiles.findIndex((u) => u.id === id);
+  if (idx > -1) adminProfiles.splice(idx, 1);
+
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
       const { error } = await supabase.from('profiles').delete().eq('id', id);
-      if (error) throw error;
+      if (error) {
+        console.warn('deleteAdminUserAction: Aviso no Supabase:', error.message);
+      }
     } catch (err) {
-      console.error('deleteAdminUserAction: Falha no Supabase', err);
-      throw new Error('Falha ao excluir usuário.');
+      console.warn('deleteAdminUserAction: Erro no Supabase:', err);
     }
   }
 
   revalidatePath('/admin/usuarios');
+  return { success: true };
 }

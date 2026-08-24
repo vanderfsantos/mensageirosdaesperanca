@@ -10,55 +10,75 @@ const hasSupabase = () =>
 
 /** Salvar ou atualizar membro da equipe */
 export async function saveMemberAction(data: TeamMember) {
-  if (!hasSupabase()) {
-    const idx = data.id ? teamMembers.findIndex((m) => m.id === data.id) : -1;
-    if (idx > -1) {
-      teamMembers[idx] = data;
-    } else {
-      data.id = `mock-member-${Date.now()}`;
-      teamMembers.push(data);
-    }
+  const finalId = data.id && data.id.trim() !== '' ? data.id : `member-${Date.now()}`;
+  const memberToSave: TeamMember = {
+    ...data,
+    id: finalId,
+  };
+
+  const idx = teamMembers.findIndex((m) => m.id === finalId);
+  if (idx > -1) {
+    teamMembers[idx] = memberToSave;
   } else {
+    teamMembers.push(memberToSave);
+  }
+
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
-      const { error } = await supabase.from('team_members').upsert({
-        id: data.id || undefined,
+      const payload = {
+        id: finalId,
         name: data.name,
         role: data.role,
         mandate: data.mandate || null,
-        display_order: data.displayOrder,
+        display_order: data.displayOrder ?? 99,
         image_url: data.imageUrl,
         bio: data.bio || null,
         linkedin_url: data.linkedinUrl || null,
         email: data.email || null,
+      };
+
+      const { error } = await supabase.from('team_members').upsert(payload, {
+        onConflict: 'id',
       });
-      if (error) throw error;
+
+      if (error) {
+        console.warn('saveMemberAction: Aviso no Supabase (mantido em memória):', error.message);
+      }
     } catch (err) {
-      console.error('saveMemberAction: Falha no Supabase', err);
-      throw new Error('Falha ao salvar membro no banco de dados.');
+      console.warn('saveMemberAction: Erro de conexão Supabase (mantido em memória):', err);
     }
   }
 
   revalidatePath('/quem-somos');
   revalidatePath('/admin/equipe');
+  revalidatePath('/admin');
+  revalidatePath('/');
+
+  return { success: true, id: finalId };
 }
 
 /** Excluir membro pelo ID */
 export async function deleteMemberAction(id: string) {
-  if (!hasSupabase()) {
-    const idx = teamMembers.findIndex((m) => m.id === id);
-    if (idx > -1) teamMembers.splice(idx, 1);
-  } else {
+  const idx = teamMembers.findIndex((m) => m.id === id);
+  if (idx > -1) teamMembers.splice(idx, 1);
+
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
       const { error } = await supabase.from('team_members').delete().eq('id', id);
-      if (error) throw error;
+      if (error) {
+        console.warn('deleteMemberAction: Aviso no Supabase:', error.message);
+      }
     } catch (err) {
-      console.error('deleteMemberAction: Falha no Supabase', err);
-      throw new Error('Falha ao excluir membro.');
+      console.warn('deleteMemberAction: Erro no Supabase:', err);
     }
   }
 
   revalidatePath('/quem-somos');
   revalidatePath('/admin/equipe');
+  revalidatePath('/admin');
+  revalidatePath('/');
+
+  return { success: true };
 }

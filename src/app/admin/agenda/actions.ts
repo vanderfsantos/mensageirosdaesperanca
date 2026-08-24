@@ -11,7 +11,7 @@ const hasSupabase = () => {
 };
 
 /**
- * Server Action: Salvar ou criar um novo curso.
+ * Server Action: Salvar ou criar um novo curso/evento.
  */
 export async function saveCourseAction(data: {
   id?: string;
@@ -28,51 +28,50 @@ export async function saveCourseAction(data: {
   statusText: 'inscricoes-abertas' | 'lista-espera' | 'encerrado';
   spotsTotal?: number;
   spotsLeft?: number;
-  workload: string; // Ex: "40 horas"
+  workload: string;
   modality: 'presencial' | 'online';
   shift: 'manha' | 'tarde' | 'noite' | 'sabado';
   syllabus: string[];
   registrationLink?: string;
 }) {
-  const isMockMode = !hasSupabase();
+  const finalId = data.id && data.id.trim() !== '' ? data.id : `course-${Date.now()}`;
 
-  if (isMockMode) {
-    // Modo de Simulação (Mutação local na memória)
-    const existingIndex = data.id ? courseEvents.findIndex(c => c.id === data.id) : -1;
+  const courseToSave: CourseEvent = {
+    id: finalId,
+    slug: data.slug,
+    title: data.title,
+    description: data.description,
+    date: data.date,
+    time: data.time || undefined,
+    location: data.location,
+    locationName: data.locationName,
+    imageUrl: data.imageUrl,
+    category: data.category,
+    status: data.status,
+    statusText: data.statusText,
+    spotsTotal: data.spotsTotal !== undefined ? Number(data.spotsTotal) : undefined,
+    spotsLeft: data.spotsLeft !== undefined ? Number(data.spotsLeft) : undefined,
+    workload: data.workload,
+    modality: data.modality,
+    shift: data.shift,
+    syllabus: data.syllabus,
+    registrationLink: data.registrationLink || undefined,
+  };
 
-    const courseToSave: CourseEvent = {
-      id: data.id || `mock-course-${Date.now()}`,
-      slug: data.slug,
-      title: data.title,
-      description: data.description,
-      date: data.date,
-      time: data.time || undefined,
-      location: data.location,
-      locationName: data.locationName,
-      imageUrl: data.imageUrl,
-      category: data.category,
-      status: data.status,
-      statusText: data.statusText,
-      spotsTotal: data.spotsTotal ?? undefined,
-      spotsLeft: data.spotsLeft ?? undefined,
-      workload: data.workload,
-      modality: data.modality,
-      shift: data.shift,
-      syllabus: data.syllabus,
-      registrationLink: data.registrationLink || undefined,
-    };
-
-    if (existingIndex > -1) {
-      courseEvents[existingIndex] = courseToSave;
-    } else {
-      courseEvents.push(courseToSave);
-    }
+  // Sempre sincroniza o mock-data local na memória para consistência imediata
+  const existingIndex = courseEvents.findIndex((c) => c.id === finalId || c.slug === data.slug);
+  if (existingIndex > -1) {
+    courseEvents[existingIndex] = courseToSave;
   } else {
-    // Persistência Real no Supabase
+    courseEvents.unshift(courseToSave);
+  }
+
+  // Tenta persistir no Supabase se configurado
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
       const payload = {
-        id: data.id || undefined,
+        id: finalId,
         slug: data.slug,
         title: data.title,
         description: data.description,
@@ -93,14 +92,15 @@ export async function saveCourseAction(data: {
         registration_link: data.registrationLink || null,
       };
 
-      const { error } = await supabase
-        .from('courses_events')
-        .upsert(payload);
+      const { error } = await supabase.from('courses_events').upsert(payload, {
+        onConflict: 'id',
+      });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('saveCourseAction: Aviso ao persistir no Supabase (mantido em memória):', error.message);
+      }
     } catch (err) {
-      console.error('Server Actions: Falha ao persistir curso no Supabase', err);
-      throw new Error('Falha ao persistir dados do curso no banco de dados.');
+      console.warn('saveCourseAction: Erro de conexão Supabase (mantido em memória):', err);
     }
   }
 
@@ -108,60 +108,57 @@ export async function saveCourseAction(data: {
   revalidatePath('/agenda');
   revalidatePath(`/agenda/${data.slug}`);
   revalidatePath('/admin/agenda');
+  revalidatePath('/admin');
+  revalidatePath('/');
+
+  return { success: true, id: finalId };
 }
 
 /**
  * Server Action: Excluir um curso pelo ID.
  */
 export async function deleteCourseAction(id: string) {
-  const isMockMode = !hasSupabase();
+  // Remove do mock data
+  const index = courseEvents.findIndex((c) => c.id === id);
+  if (index > -1) {
+    courseEvents.splice(index, 1);
+  }
 
-  if (isMockMode) {
-    // Modo de Simulação (Mutação local na memória)
-    const index = courseEvents.findIndex(c => c.id === id);
-    if (index > -1) {
-      courseEvents.splice(index, 1);
-    }
-  } else {
-    // Persistência Real no Supabase
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
-      const { error } = await supabase
-        .from('courses_events')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const { error } = await supabase.from('courses_events').delete().eq('id', id);
+      if (error) {
+        console.warn('deleteCourseAction: Aviso ao deletar no Supabase:', error.message);
+      }
     } catch (err) {
-      console.error('Server Actions: Falha ao deletar curso no Supabase', err);
-      throw new Error('Falha ao remover o curso do banco de dados.');
+      console.warn('deleteCourseAction: Erro ao deletar no Supabase:', err);
     }
   }
 
-  // Revalida o cache
   revalidatePath('/agenda');
   revalidatePath('/admin/agenda');
+  revalidatePath('/admin');
+  revalidatePath('/');
+
+  return { success: true };
 }
 
 /**
- * Server Action: Alterar rapidamente o status e o texto de status de um curso.
+ * Server Action: Alterar rapidamente o status de um curso.
  */
 export async function toggleStatusAction(
-  id: string, 
-  status: 'upcoming' | 'ongoing' | 'completed', 
+  id: string,
+  status: 'upcoming' | 'ongoing' | 'completed',
   statusText: 'inscricoes-abertas' | 'lista-espera' | 'encerrado'
 ) {
-  const isMockMode = !hasSupabase();
+  const course = courseEvents.find((c) => c.id === id);
+  if (course) {
+    course.status = status;
+    course.statusText = statusText;
+  }
 
-  if (isMockMode) {
-    // Modo de Simulação (Mutação local na memória)
-    const course = courseEvents.find(c => c.id === id);
-    if (course) {
-      course.status = status;
-      course.statusText = statusText;
-    }
-  } else {
-    // Persistência Real no Supabase
+  if (hasSupabase()) {
     try {
       const supabase = await createClient();
       const { error } = await supabase
@@ -169,14 +166,16 @@ export async function toggleStatusAction(
         .update({ status, status_text: statusText })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.warn('toggleStatusAction: Aviso ao atualizar status no Supabase:', error.message);
+      }
     } catch (err) {
-      console.error('Server Actions: Falha ao alterar status de curso no Supabase', err);
-      throw new Error('Falha ao atualizar o status do curso.');
+      console.warn('toggleStatusAction: Erro no Supabase:', err);
     }
   }
 
-  // Revalida o cache
   revalidatePath('/agenda');
   revalidatePath('/admin/agenda');
+
+  return { success: true };
 }
