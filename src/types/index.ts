@@ -22,6 +22,7 @@ export interface CourseEvent {
 
 export interface NewsPost {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   content: string;

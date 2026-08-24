@@ -130,9 +130,10 @@ export const courseEvents: CourseEvent[] = [
 export const newsPosts: NewsPost[] = [
   {
     id: '1',
+    slug: 'nova-sala-de-informatica',
     title: 'Mensageiros da Esperança inaugura nova Sala de Informática',
     excerpt: 'Com a parceria estratégica do Instituto Inovação Sustentável, a comunidade agora conta com 15 computadores modernos e internet banda larga de alta velocidade.',
-    content: 'Temos o orgulho de anunciar a inauguração da nossa nova Sala de Inclusão Digital. Esse espaço foi projetado para oferecer acesso gratuito à internet, capacitação tecnológica e mentorias profissionais para jovens e adultos do bairro. O projeto foi viabilizado através do aporte do Instituto Inovação Sustentável e doações da comunidade civil. Os novos computadores permitirão triplicar o número de alunos atendidos anualmente em nossos cursos livres e preparatórios.',
+    content: 'Temos o orgulho de anunciar a tempo a inauguração da nossa nova Sala de Inclusão Digital. Esse espaço foi projetado para oferecer acesso gratuito à internet, capacitação tecnológica e mentorias profissionais para jovens e adultos do bairro. O projeto foi viabilizado através do aporte do Instituto Inovação Sustentável e doações da comunidade civil. Os novos computadores permitirão triplicar o número de alunos atendidos anualmente em nossos cursos livres e preparatórios.',
     imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop',
     category: 'Conquistas',
     date: '20 Fev 2026',
@@ -141,6 +142,7 @@ export const newsPosts: NewsPost[] = [
   },
   {
     id: '2',
+    slug: 'campanha-agasalho-2026',
     title: 'Campanha de Agasalho 2026 atende mais de 180 famílias',
     excerpt: 'Graças ao engajamento de nossos voluntários e doadores, conseguimos arrecadar mais de 600 cobertores e agasalhos na primeira fase da campanha.',
     content: 'O inverno se aproxima e a solidariedade aquece vidas. A primeira fase da Campanha de Agasalho 2026 foi um sucesso absoluto. Foram arrecadados e distribuídos agasados infantis, mantas e cobertores de alta qualidade para 185 famílias cadastradas em nossos programas de assistência social direta. Agradecemos a todos que doaram nos pontos de coleta parceiros. A campanha continua ativa e novas distribuições ocorrerão nas próximas semanas.',
@@ -152,6 +154,7 @@ export const newsPosts: NewsPost[] = [
   },
   {
     id: '3',
+    slug: 'esporte-transformando-vidas',
     title: 'Como o esporte tem transformado a vida de crianças na comunidade',
     excerpt: 'Projeto de futebol e artes marciais reduz a evasão escolar e promove integração social e saúde no contraturno escolar.',
     content: 'Nosso projeto esportivo "Mover a Vida" completa dois anos com dados impressionantes: 95% dos participantes frequentes apresentaram melhoria em suas notas escolares e frequência de aulas. Além do desenvolvimento físico e motor, os jovens aprendem lições valiosas de disciplina, respeito mútuo e trabalho em equipe. Conheça as histórias das nossas crianças e saiba como contribuir com equipamentos esportivos ou apadrinhando um atleta juvenil.',
