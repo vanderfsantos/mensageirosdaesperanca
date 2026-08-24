@@ -168,7 +168,7 @@ export const newsPosts: NewsPost[] = [
     author: 'Ricardo Mendes',
     readTime: '5 min de leitura',
     featured: false,
-    publishedStatus: 'rascunho',
+    publishedStatus: 'publicado',
   }
 ];
 
