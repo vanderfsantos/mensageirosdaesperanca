@@ -64,13 +64,13 @@ export default function ImpactCounter({ targetValue, label, suffix = '' }: Impac
   return (
     <div 
       ref={containerRef} 
-      className="bg-brand-gray-light p-8 rounded-2xl border border-brand-gray-surface shadow-sm flex flex-col justify-center items-center h-40 text-center hover:shadow-md transition-all duration-300 group hover:-translate-y-1"
+      className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col justify-center items-center h-40 text-center hover:shadow-md transition-all duration-300 group hover:-translate-y-1"
     >
-      <div className="text-4xl sm:text-5xl font-black text-brand-teal tracking-tight group-hover:scale-105 transition-transform duration-300">
+      <div className="text-4xl sm:text-5xl font-black text-secondary tracking-tight group-hover:scale-105 transition-transform duration-300">
         {formattedCount}{suffix}
       </div>
-      <div className="h-1 w-8 bg-brand-orange group-hover:w-12 transition-all duration-300 my-3 rounded-full" />
-      <p className="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wider">
+      <div className="h-1 w-8 bg-primary/20 group-hover:w-12 group-hover:bg-primary transition-all duration-300 my-3 rounded-full" />
+      <p className="text-sm font-bold text-slate-600 uppercase tracking-wider">
         {label}
       </p>
     </div>

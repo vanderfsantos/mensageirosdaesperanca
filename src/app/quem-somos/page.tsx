@@ -33,7 +33,7 @@ export default async function QuemSomos() {
       name: 'Casinha Azul Vila Yolanda',
       address: 'Rua das Flores, 98 - Vila Yolanda, Osasco - SP',
       services: ['Apoio Escolar e Letramento', 'Oficinas Lúdicas e de Leitura', 'Brinquedoteca Comunitária'],
-      mapUrl: 'https://maps.google.com/?q=Rua+das+Flores,+98+Vila+Yolanda+Osasco',
+      mapUrl: 'https://maps.google.com/?q=Rua+da+Solidariedade,+450+Lapa+Sao+Paulo',
       description: 'Espaço acolhedor no contraturno escolar focado no desenvolvimento integral de crianças de 6 a 12 anos.',
     },
     {
@@ -110,10 +110,10 @@ export default async function QuemSomos() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header Banner */}
-      <section className="bg-gradient-to-r from-brand-teal to-brand-teal-dark text-white py-16 px-4">
+      <section className="bg-gradient-to-r from-primary to-primary-hover text-white py-16 px-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center lg:text-left">
           <h1 className="text-4xl font-extrabold tracking-tight">Quem Somos</h1>
-          <p className="text-brand-teal-light mt-2 text-lg font-light max-w-xl">
+          <p className="text-primary-light mt-2 text-lg font-light max-w-xl">
             Conheça nossa trajetória, equipe de governança e compromisso socioambiental.
           </p>
         </div>
@@ -127,7 +127,7 @@ export default async function QuemSomos() {
               <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">
                 Espaço Acolhedor de Inclusão e Transformação
               </h2>
-              <div className="h-1.5 w-16 bg-brand-orange rounded-full" />
+              <div className="h-1.5 w-16 bg-secondary rounded-full" />
               
               <div className="space-y-4 text-slate-600 leading-relaxed text-base">
                 <p>
@@ -140,14 +140,14 @@ export default async function QuemSomos() {
             </div>
 
             {/* Caixa de Relação Jurídica */}
-            <div className="lg:col-span-5 bg-brand-orange-light border border-brand-orange/20 rounded-3xl p-8 space-y-4">
-              <div className="flex items-center gap-3 text-brand-orange">
+            <div className="lg:col-span-5 bg-secondary-light/45 border border-secondary/20 rounded-3xl p-8 space-y-4">
+              <div className="flex items-center gap-3 text-secondary">
                 <Shield className="h-7 w-7 shrink-0" />
                 <h3 className="text-lg font-extrabold tracking-tight">
                   Governança & Parceria Institucional
                 </h3>
               </div>
-              <div className="h-0.5 w-full bg-brand-orange/15" />
+              <div className="h-0.5 w-full bg-secondary/10" />
               <p className="text-slate-700 text-sm leading-relaxed">
                 A gestão administrativa, orçamentária e de captação de recursos da OSC Mensageiros da Esperança é realizada sob cooperação e assessoria técnica do <strong>Instituto Inovação Sustentável</strong>. 
               </p>
@@ -159,39 +159,39 @@ export default async function QuemSomos() {
         </div>
       </section>
 
-      {/* Missão, Visão e Valores (Cards com fundo neutro #E2E6E9) */}
-      <section className="py-20 bg-brand-gray-light border-t border-b border-brand-gray-surface">
+      {/* Missão, Visão e Valores */}
+      <section className="py-20 bg-neutral-bg border-t border-b border-slate-200/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card Missão */}
-            <div className="bg-brand-gray-surface/50 p-8 rounded-3xl border border-brand-gray-surface shadow-sm flex flex-col items-center text-center space-y-4 hover:shadow-md transition-all">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-teal text-white shadow-md shadow-brand-teal/20">
-                <Heart className="h-7 w-7 fill-white/20" />
+            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center text-center space-y-4 hover:shadow-md transition-shadow">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light text-primary">
+                <Heart className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-black text-slate-800">Missão</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-800">Missão</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
                 Acolher e empoderar indivíduos e famílias sob risco social através de educação profissionalizante, inclusão digital, oficinas socioeducativas e suporte psicossocial humanizado.
               </p>
             </div>
 
             {/* Card Visão */}
-            <div className="bg-brand-gray-surface/50 p-8 rounded-3xl border border-brand-gray-surface shadow-sm flex flex-col items-center text-center space-y-4 hover:shadow-md transition-all">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-orange text-white shadow-md shadow-brand-orange/20">
-                <Eye className="h-7 w-7" />
+            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center text-center space-y-4 hover:shadow-md transition-shadow">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary-light text-secondary">
+                <Eye className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-black text-slate-800">Visão</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-800">Visão</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
                 Consolidar-se como um polo de transformação e emancipação comunitária de referência nacional, mantendo sustentabilidade orçamentária e governança baseada em critérios ESG.
               </p>
             </div>
 
             {/* Card Valores */}
-            <div className="bg-brand-gray-surface/50 p-8 rounded-3xl border border-brand-gray-surface shadow-sm flex flex-col items-center text-center space-y-4 hover:shadow-md transition-all">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gold text-white shadow-md shadow-brand-gold/20">
-                <Award className="h-7 w-7" />
+            <div className="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center text-center space-y-4 hover:shadow-md transition-shadow">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light text-primary">
+                <Award className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-black text-slate-800">Valores</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-800">Valores</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
                 Solidariedade ativa, transparência administrativa total, diversidade étnico-racial com equidade social, inovação educacional e profundo respeito à dignidade de cada cidadão.
               </p>
             </div>
@@ -203,13 +203,13 @@ export default async function QuemSomos() {
       <section className="py-24 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span className="text-sm font-extrabold text-brand-teal uppercase tracking-widest">
+            <span className="text-sm font-extrabold text-primary uppercase tracking-widest">
               Linha do Tempo
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               Nossa Trajetória
             </h2>
-            <div className="h-1.5 w-16 bg-brand-teal mx-auto rounded-full" />
+            <div className="h-1.5 w-16 bg-primary mx-auto rounded-full" />
             <p className="text-slate-600">
               Clique nos anos marcantes para explorar a evolução e conquistas históricas ao longo de 28 anos de dedicação.
             </p>
@@ -220,16 +220,16 @@ export default async function QuemSomos() {
       </section>
 
       {/* Governança e Equipe */}
-      <section id="equipe" className="py-24 bg-brand-gray-light border-t border-b border-brand-gray-surface">
+      <section id="equipe" className="py-24 bg-neutral-bg border-t border-b border-slate-200/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span className="text-sm font-extrabold text-brand-orange uppercase tracking-widest">
+            <span className="text-sm font-extrabold text-secondary uppercase tracking-widest">
               Liderança e Responsabilidade
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               Governança e Equipe Técnica
             </h2>
-            <div className="h-1.5 w-16 bg-brand-orange mx-auto rounded-full" />
+            <div className="h-1.5 w-16 bg-secondary mx-auto rounded-full" />
             <p className="text-slate-600">
               Nossos diretores e conselheiros atuam de forma transparente, liderando a execução de projetos e auditorias orçamentárias.
             </p>
@@ -239,35 +239,24 @@ export default async function QuemSomos() {
             {team.map((member) => (
               <div 
                 key={member.id || member.name}
-                className="group bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden"
+                className="group bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden"
               >
                 {/* Badge de Mandato */}
-                <div className="absolute top-4 right-4 bg-brand-teal-light text-brand-teal text-[10px] font-bold px-2.5 py-1 rounded-full border border-brand-teal/20">
+                <div className="absolute top-4 right-4 bg-primary-light text-primary text-[10px] font-bold px-2 py-1 rounded">
                   {member.mandate || 'Gestão 2024-2026'}
                 </div>
 
                 <div className="space-y-4">
                   {/* Foto de Perfil */}
-                  <div className="flex h-16 w-16 overflow-hidden rounded-2xl bg-brand-teal-light text-brand-teal group-hover:bg-brand-teal group-hover:text-white transition-colors duration-300">
-                    {member.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img 
-                        src={member.imageUrl} 
-                        alt={member.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center">
-                        <Users className="h-7 w-7" />
-                      </div>
-                    )}
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                    <Users className="h-7 w-7" />
                   </div>
                   
                   <div className="space-y-1">
-                    <h4 className="font-extrabold text-slate-800 text-base leading-snug group-hover:text-brand-teal transition-colors">
+                    <h4 className="font-extrabold text-slate-800 text-base leading-snug group-hover:text-primary transition-colors">
                       {member.name}
                     </h4>
-                    <p className="text-xs text-brand-orange font-bold uppercase tracking-wider">
+                    <p className="text-xs text-secondary font-bold uppercase tracking-wider">
                       {member.role}
                     </p>
                   </div>
@@ -286,13 +275,13 @@ export default async function QuemSomos() {
       <section className="py-24 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span className="text-sm font-extrabold text-brand-teal uppercase tracking-widest">
+            <span className="text-sm font-extrabold text-primary uppercase tracking-widest">
               Onde Atuamos
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               Nossas Unidades de Atendimento
             </h2>
-            <div className="h-1.5 w-16 bg-brand-teal mx-auto rounded-full" />
+            <div className="h-1.5 w-16 bg-primary mx-auto rounded-full" />
             <p className="text-slate-600">
               Contamos com sedes administrativas, polos de capacitação técnica, núcleos ambientais e negócios sociais na grande São Paulo.
             </p>
@@ -314,16 +303,16 @@ export default async function QuemSomos() {
       </section>
 
       {/* ODS Norteadoras */}
-      <section className="py-24 bg-brand-gray-light border-t border-brand-gray-surface">
+      <section className="py-24 bg-neutral-bg border-t border-slate-200/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span className="text-sm font-extrabold text-brand-orange uppercase tracking-widest">
+            <span className="text-sm font-extrabold text-secondary uppercase tracking-widest">
               Impacto Sustentável
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               Objetivos de Desenvolvimento Sustentável (ODS)
             </h2>
-            <div className="h-1.5 w-16 bg-brand-orange mx-auto rounded-full" />
+            <div className="h-1.5 w-16 bg-secondary mx-auto rounded-full" />
             <p className="text-slate-600">
               Nossas oficinas e diretrizes operacionais estão alinhadas aos seguintes Objetivos da Agenda 2030 da ONU, incluindo a diretiva nacional ODS 18 de igualdade étnico-racial.
             </p>
