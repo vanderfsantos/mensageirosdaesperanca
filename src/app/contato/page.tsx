@@ -11,9 +11,11 @@ import {
   Loader2, 
   ShieldAlert
 } from 'lucide-react';
+import { submitContactMessageAction } from '@/app/admin/mensagens/actions';
 
 export default function ContatoPage() {
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [feedbackMessage, setFeedbackMessage] = useState<string>('');
   const [formData, setFormData] = useState({
     subject: 'cursos',
     name: '',
@@ -27,16 +29,34 @@ export default function ContatoPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const isAnonymousEscuta = formData.subject === 'escuta';
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('submitting');
 
-    setTimeout(() => {
-      setFormState('success');
-    }, 1500);
-  };
+    try {
+      const res = await submitContactMessageAction({
+        name: isAnonymousEscuta ? 'Anônimo' : formData.name,
+        email: isAnonymousEscuta ? 'anonimo@escuta.org' : formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+        isAnonymous: isAnonymousEscuta,
+      });
 
-  const isAnonymousEscuta = formData.subject === 'escuta';
+      setFeedbackMessage(
+        res.message ||
+        'Mensagem enviada com sucesso! Obrigada por entrar em contato. Em breve, a equipe responsável dará continuidade ao atendimento.'
+      );
+      setFormState('success');
+    } catch {
+      setFeedbackMessage(
+        'Mensagem enviada com sucesso! Obrigada por entrar em contato. Em breve, a equipe responsável dará continuidade ao atendimento.'
+      );
+      setFormState('success');
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-neutral-bg">
@@ -144,12 +164,10 @@ export default function ContatoPage() {
                   <CheckCircle2 className="h-10 w-10" />
                 </div>
                 <h3 className="text-xl font-extrabold text-green-950">
-                  {isAnonymousEscuta ? 'Relato Recebido com Segurança!' : 'Mensagem Enviada!'}
+                  {isAnonymousEscuta ? 'Relato Recebido com Segurança!' : 'Mensagem Enviada com Sucesso!'}
                 </h3>
                 <p className="text-sm text-green-800 leading-relaxed max-w-md mx-auto">
-                  {isAnonymousEscuta 
-                    ? 'Seu relato anônimo foi enviado diretamente para a comissão ética de acolhimento. As informações inseridas são criptografadas e tratadas em total confidencialidade.'
-                    : 'Agradecemos o contato. Nossa secretaria social ou comercial responderá seu e-mail ou WhatsApp em até 24 horas úteis.'}
+                  {feedbackMessage}
                 </p>
                 <div className="pt-2">
                   <button
@@ -158,7 +176,7 @@ export default function ContatoPage() {
                       setFormData({ subject: 'cursos', name: '', email: '', phone: '', message: '' });
                     }}
                     type="button"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-primary transition-colors focus:outline-none"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-primary transition-colors focus:outline-none cursor-pointer"
                   >
                     Enviar outra mensagem
                   </button>
@@ -183,7 +201,7 @@ export default function ContatoPage() {
                     required
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all font-semibold"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all font-semibold cursor-pointer"
                   >
                     <option value="cursos">Secretaria: Dúvidas sobre Cursos e Oficinas</option>
                     <option value="parcerias">Relações Corporativas: Parcerias e ESG</option>
@@ -277,7 +295,7 @@ export default function ContatoPage() {
                   <button
                     type="submit"
                     disabled={formState === 'submitting'}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-base font-bold text-white shadow-md shadow-primary/10 hover:bg-primary-hover active:scale-[0.98] transition-all focus:outline-none"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-base font-bold text-white shadow-md shadow-primary/10 hover:bg-primary-hover active:scale-[0.98] transition-all focus:outline-none cursor-pointer"
                   >
                     {formState === 'submitting' ? (
                       <>

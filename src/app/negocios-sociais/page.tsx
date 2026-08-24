@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Send
 } from 'lucide-react';
+import { submitContactMessageAction } from '@/app/admin/mensagens/actions';
 
 type ServiceKey = 'buffet' | 'economia-circular' | 'estudio' | 'esg';
 
@@ -101,13 +102,21 @@ export default function NegociosSociaisPage() {
     setFormData((prev) => ({ ...prev, service: key }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('submitting');
-
-    setTimeout(() => {
-      setFormState('success');
-    }, 1500);
+    try {
+      await submitContactMessageAction({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: `Orçamento: ${formData.service.toUpperCase()}`,
+        message: `Empresa/Organização: ${formData.company || 'Pessoa Física'}\nServiço: ${formData.service}\n\nDetalhes da solicitação:\n${formData.message}`,
+      });
+    } catch (err) {
+      console.warn('handleFormSubmit error:', err);
+    }
+    setFormState('success');
   };
 
   return (

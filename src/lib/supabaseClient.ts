@@ -20,7 +20,7 @@ export async function getCoursesEvents(): Promise<CourseEvent[]> {
     const { data, error } = await supabase
       .from('courses_events')
       .select('*')
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (error || !data || data.length === 0) throw error || new Error('Nenhum dado retornado.');
 
@@ -172,7 +172,7 @@ export async function getImpactStories(): Promise<ImpactStory[]> {
     const { data, error } = await supabase
       .from('impact_stories')
       .select('*')
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (error || !data || data.length === 0) throw error || new Error('Nenhum dado retornado.');
 
@@ -227,20 +227,22 @@ export async function getTransparencyDocs(): Promise<TransparencyDoc[]> {
 }
 
 /**
- * Busca a equipe corporativa.
+ * Busca a equipe corporativa com ordenação por display_order.
  */
 export async function getTeamMembers(): Promise<TeamMember[]> {
   if (!supabase) return mockData.teamMembers;
   try {
     const { data, error } = await supabase
       .from('team_members')
-      .select('*')
-      .order('created_at', { ascending: true });
+      .select('*');
 
     if (error || !data || data.length === 0) throw error || new Error('Nenhum dado retornado.');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return data.map((item: any) => ({
+    const sorted = [...data].sort((a: any, b: any) => (a.display_order ?? 99) - (b.display_order ?? 99));
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return sorted.map((item: any) => ({
       id: item.id,
       name: item.name,
       role: item.role,

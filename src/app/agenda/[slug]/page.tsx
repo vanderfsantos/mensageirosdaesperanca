@@ -7,7 +7,7 @@ import {
   Check, 
   ArrowLeft
 } from 'lucide-react';
-import { courseEvents } from '@/lib/mock-data';
+import { getCourseEventBySlug } from '@/lib/supabaseClient';
 import RegistrationForm from '@/components/ui/RegistrationForm';
 
 interface PageProps {
@@ -16,7 +16,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const event = courseEvents.find((e) => e.slug === slug);
+  const event = await getCourseEventBySlug(slug);
   
   return {
     title: event ? `${event.title} | Mensageiros da Esperança` : 'Curso não encontrado',
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function CourseDetailsPage({ params }: PageProps) {
   const { slug } = await params;
-  const event = courseEvents.find((e) => e.slug === slug);
+  const event = await getCourseEventBySlug(slug);
 
   if (!event) {
     notFound();

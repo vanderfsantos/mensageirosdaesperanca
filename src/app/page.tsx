@@ -11,16 +11,28 @@ import {
   ArrowRight, 
   Heart, 
   Sparkles, 
-  Users
+  Users,
+  Newspaper
 } from 'lucide-react';
-import { courseEvents } from '@/lib/mock-data';
+import { getCoursesEvents, getNewsPosts } from '@/lib/supabaseClient';
 import ImpactCounter from '@/components/ui/ImpactCounter';
 import EixoCard from '@/components/ui/EixoCard';
 import NegocioSocialCard from '@/components/ui/NegocioSocialCard';
 
-export default function Home() {
-  // Filtra os 3 primeiros cursos/oficinas próximos da vitrine
-  const upcomingCourses = courseEvents.slice(0, 3);
+export default async function Home() {
+  // Busca cursos e notícias dinamicamente do Supabase com fallback seguro
+  const [allCourses, allNews] = await Promise.all([
+    getCoursesEvents(),
+    getNewsPosts(),
+  ]);
+
+  // Filtra os 3 cursos mais recentes com vagas abertas ou em breve
+  const activeCourses = allCourses.filter(c => c.status === 'upcoming' || c.statusText === 'inscricoes-abertas' || c.statusText === 'lista-espera');
+  const upcomingCourses = (activeCourses.length > 0 ? activeCourses : allCourses).slice(0, 3);
+
+  // Filtra as 3 notícias publicadas mais recentes
+  const publishedNews = allNews.filter(n => n.publishedStatus !== 'rascunho');
+  const latestNews = (publishedNews.length > 0 ? publishedNews : allNews).slice(0, 3);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -50,7 +62,7 @@ export default function Home() {
                   QUERO PARTICIPAR
                 </Link>
                 <Link
-                  href="/faca-parte#doacoes"
+                  href="/faca-parte"
                   className="inline-flex items-center justify-center rounded-xl border-2 border-white bg-white/5 backdrop-blur-sm px-8 py-4 text-base font-bold text-white hover:bg-white hover:text-slate-900 hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
                 >
                   QUERO APOIAR
@@ -185,7 +197,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Vitrine de Oportunidades */}
+      {/* 5. Vitrine de Oportunidades (Cursos do Supabase) */}
       <section id="oportunidades" className="py-24 bg-neutral-bg border-b border-slate-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-16 gap-6 text-center md:text-left">
@@ -268,8 +280,91 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. Negócios Sociais em Destaque */}
-      <section id="negocios-sociais" className="py-24 bg-white border-b border-slate-100">
+      {/* 6. Últimas Notícias (Dinâmico do Supabase) */}
+      <section id="noticias-destaque" className="py-24 bg-white border-b border-slate-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-16 gap-6 text-center md:text-left">
+            <div className="space-y-3">
+              <span className="text-sm font-extrabold text-primary uppercase tracking-widest">
+                Acontecimentos e Artigos
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Últimas Notícias e Novidades
+              </h2>
+              <div className="h-1 w-16 bg-primary mx-auto md:mx-0 rounded-full" />
+            </div>
+            <Link 
+              href="/noticias" 
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-hover group"
+            >
+              Ver Todas as Notícias <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {latestNews.map((news) => (
+              <article 
+                key={news.id}
+                className="group flex flex-col overflow-hidden rounded-2xl bg-white border border-slate-200/80 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              >
+                <div className="relative h-48 overflow-hidden bg-slate-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={news.imageUrl} 
+                    alt={news.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-103"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-white text-xs font-bold text-brand-orange shadow-sm uppercase tracking-wider">
+                      {news.category}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-1 flex-col p-6 space-y-4">
+                  <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
+                      {news.date}
+                    </span>
+                    {news.readTime && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
+                        {news.readTime}
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="text-lg font-bold text-slate-800 group-hover:text-primary transition-colors line-clamp-2">
+                    {news.title}
+                  </h3>
+
+                  <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed flex-grow">
+                    {news.excerpt}
+                  </p>
+
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-xs text-slate-500 font-medium">
+                      Por {news.author}
+                    </span>
+                    <Link
+                      href={`/noticias/${news.slug}`}
+                      className="inline-flex items-center gap-1 text-sm font-bold text-brand-orange hover:text-brand-orange-dark transition-all"
+                    >
+                      Ler Matéria <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Negócios Sociais em Destaque */}
+      <section id="negocios-sociais" className="py-24 bg-neutral-bg border-b border-slate-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span className="text-sm font-extrabold text-primary uppercase tracking-widest">
@@ -310,7 +405,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. Chamada Final de Mobilização (Banner CTA) */}
+      {/* 8. Chamada Final de Mobilização (Banner CTA) */}
       <section id="doe" className="py-24 bg-gradient-to-br from-primary via-primary-hover to-slate-900 text-white text-center relative px-4">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-white to-transparent pointer-events-none" />
         
@@ -327,7 +422,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Link
-              href="/faca-parte#doacoes"
+              href="/faca-parte"
               className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-secondary px-8 py-4 text-base font-bold text-white shadow-lg shadow-secondary/20 hover:bg-secondary-hover hover:scale-103 transition-all focus:outline-none"
             >
               Doe Agora

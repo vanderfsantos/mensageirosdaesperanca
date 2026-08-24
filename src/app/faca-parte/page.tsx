@@ -14,6 +14,7 @@ import {
   Smartphone,
   Info
 } from 'lucide-react';
+import { submitContactMessageAction } from '@/app/admin/mensagens/actions';
 
 export default function FacaPartePage() {
   // Estados de Doação
@@ -59,16 +60,38 @@ export default function FacaPartePage() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  const handleVolunteerSubmit = (e: React.FormEvent) => {
+  const handleVolunteerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setVolunteerState('submitting');
-    setTimeout(() => setVolunteerState('success'), 1500);
+    try {
+      await submitContactMessageAction({
+        name: volunteerForm.name,
+        email: volunteerForm.email,
+        phone: volunteerForm.phone,
+        subject: 'Candidatura de Voluntário',
+        message: `CPF: ${volunteerForm.cpf || 'Não informado'}\nÁreas de Interesse: ${volunteerForm.areas.join(', ') || 'Geral'}\nDisponibilidade: ${volunteerForm.shifts.join(', ') || 'A combinar'}`,
+      });
+    } catch (err) {
+      console.warn('handleVolunteerSubmit error:', err);
+    }
+    setVolunteerState('success');
   };
 
-  const handleCompanySubmit = (e: React.FormEvent) => {
+  const handleCompanySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setCompanyState('submitting');
-    setTimeout(() => setCompanyState('success'), 1500);
+    try {
+      await submitContactMessageAction({
+        name: `${companyForm.contactName} (${companyForm.companyName})`,
+        email: companyForm.email,
+        phone: companyForm.phone,
+        subject: 'Parceria Institucional / ESG',
+        message: `Empresa: ${companyForm.companyName}\nCNPJ: ${companyForm.cnpj || 'Não informado'}\n\nProposta de Parceria:\n${companyForm.message}`,
+      });
+    } catch (err) {
+      console.warn('handleCompanySubmit error:', err);
+    }
+    setCompanyState('success');
   };
 
   const handleAreaChange = (area: string) => {

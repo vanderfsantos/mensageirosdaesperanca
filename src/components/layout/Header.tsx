@@ -108,7 +108,7 @@ export default function Header() {
               <span>Quero Participar</span>
             </Link>
             <Link
-              href="/faca-parte#doacoes"
+              href="/faca-parte"
               className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-orange hover:bg-brand-orange-dark px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-md shadow-brand-orange/25 transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2"
             >
               <Heart className="h-3.5 w-3.5 fill-white" />
@@ -171,7 +171,7 @@ export default function Header() {
               QUERO PARTICIPAR
             </Link>
             <Link
-              href="/faca-parte#doacoes"
+              href="/faca-parte"
               onClick={() => setIsMobileMenuOpen(false)}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-orange hover:bg-brand-orange-dark px-4 py-3 text-sm font-black uppercase tracking-wider text-white shadow-md shadow-brand-orange/20 transition-all text-center"
             >
