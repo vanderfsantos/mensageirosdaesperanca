@@ -18,11 +18,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   politicas:     'Políticas',
 };
 const CATEGORY_COLORS: Record<string, string> = {
-  institucional: 'bg-primary/10 text-primary',
-  governanca:    'bg-violet-100 text-violet-700',
+  institucional: 'bg-brand-teal-light text-brand-teal',
+  governanca:    'bg-purple-100 text-purple-700',
   atividades:    'bg-emerald-100 text-emerald-700',
   contas:        'bg-amber-100 text-amber-700',
-  mrosc:         'bg-secondary/10 text-secondary',
+  mrosc:         'bg-brand-orange-light text-brand-orange',
   politicas:     'bg-slate-100 text-slate-600',
 };
 
@@ -257,7 +257,7 @@ export default function TransparenciaAdmin({ initialDocs }: { initialDocs: Trans
 
             <div className="flex gap-3 pt-2">
               <button onClick={() => setShowModal(false)} disabled={isSaving} className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancelar</button>
-              <button onClick={handleSave} disabled={isSaving} className="flex-1 rounded-xl bg-primary py-3 text-sm font-bold text-white hover:bg-primary-hover disabled:opacity-60 flex items-center justify-center gap-2">
+              <button onClick={handleSave} disabled={isSaving} className="flex-1 rounded-xl bg-brand-orange py-3 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark disabled:opacity-60 flex items-center justify-center gap-2">
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {isSaving ? 'Salvando...' : 'Salvar'}
               </button>

@@ -436,7 +436,7 @@ export default function CourseForm({ initialData }: CourseFormProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-primary/10 hover:bg-primary-hover active:scale-[0.98] transition-all focus:outline-none disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-brand-orange px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark active:scale-[0.98] transition-all focus:outline-none disabled:opacity-50"
           >
             {isLoading ? (
               <>

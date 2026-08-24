@@ -102,11 +102,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }`}
       >
         <div className="flex flex-col">
-          {/* Header da Sidebar */}
-          <div className="flex h-20 items-center justify-between px-5 border-b border-slate-800 shrink-0">
+          {/* Header da Sidebar em Teal Escuro */}
+          <div className="flex h-20 items-center justify-between px-5 bg-brand-teal-dark border-b border-brand-teal/40 shrink-0">
             {isSidebarOpen ? (
               <Link href="/admin" className="flex items-center gap-2 overflow-hidden">
-                <Logo variant="default" className="brightness-125 h-10 w-44" />
+                <Logo variant="default" className="brightness-150 h-10 w-44" />
               </Link>
             ) : (
               <Link href="/admin" className="mx-auto">
@@ -118,13 +118,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button
                 onClick={() => setIsSidebarOpen(false)}
                 type="button"
-                className="text-slate-500 hover:text-white transition-colors cursor-pointer hidden md:block"
+                className="text-brand-teal-light hover:text-white transition-colors cursor-pointer hidden md:block"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
             )}
           </div>
-
 
           {/* Itens do Menu */}
           <nav className="p-4 space-y-1.5 flex-1 overflow-y-auto">
@@ -138,18 +137,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   href={item.path}
                   className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-bold tracking-wide transition-all ${
                     isActive
-                      ? 'bg-primary text-white shadow-md shadow-primary/10'
-                      : 'hover:bg-slate-800 hover:text-white'
+                      ? 'bg-brand-teal-light text-brand-teal-dark font-black shadow-md shadow-black/10'
+                      : 'text-slate-300 hover:bg-white/10 hover:text-white'
                   }`}
                   title={item.label}
                 >
-                  <IconComponent className="h-5 w-5 shrink-0" />
+                  <IconComponent className={`h-5 w-5 shrink-0 ${isActive ? 'text-brand-teal-dark' : 'text-slate-400'}`} />
                   {isSidebarOpen && <span>{item.label}</span>}
                 </Link>
               );
             })}
           </nav>
         </div>
+
 
         {/* Rodapé da Sidebar */}
         <div className="p-4 border-t border-slate-800 shrink-0">

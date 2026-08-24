@@ -203,11 +203,12 @@ export default function NewsForm({ initialData }: NewsFormProps) {
           type="button"
           onClick={() => handleSubmit('publicado')}
           disabled={isLoading || success}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary-hover transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand-orange px-5 py-3 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors disabled:opacity-50"
         >
           {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           Publicar Agora
         </button>
+
       </div>
     </div>
   );

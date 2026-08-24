@@ -87,10 +87,10 @@ export default function Timeline() {
 
   return (
     <div className="w-full space-y-12">
-      {/* Seletor de Anos (Desktop: Linha / Mobile: Carrossel de botões) */}
+      {/* Seletor de Anos com Linhas em brand-teal e Anos em brand-orange */}
       <div className="relative">
-        {/* Linha horizontal de fundo */}
-        <div className="absolute top-1/2 left-4 right-4 h-0.5 bg-slate-200 -translate-y-1/2 hidden md:block" />
+        {/* Linha horizontal em brand-teal */}
+        <div className="absolute top-1/2 left-4 right-4 h-1 bg-brand-teal/30 -translate-y-1/2 hidden md:block" />
         
         <div className="flex md:justify-between items-center gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none relative snap-x">
           {events.map((event, idx) => (
@@ -102,12 +102,12 @@ export default function Timeline() {
                 idx === activeIndex ? 'scale-110' : 'hover:scale-105'
               } transition-transform duration-300`}
             >
-              {/* Círculo do Ano */}
+              {/* Marcador do Ano */}
               <div
                 className={`flex h-12 w-24 items-center justify-center rounded-full font-black text-sm shadow-md transition-all duration-300 ${
                   idx === activeIndex
-                    ? 'bg-primary text-white scale-105 ring-4 ring-primary-light'
-                    : 'bg-white text-slate-500 border border-slate-200'
+                    ? 'bg-brand-orange text-white scale-105 ring-4 ring-brand-orange/20'
+                    : 'bg-white text-brand-teal border-2 border-brand-teal/40 hover:border-brand-teal'
                 }`}
               >
                 {event.year}
@@ -118,23 +118,22 @@ export default function Timeline() {
       </div>
 
       {/* Box de Exibição do Evento Selecionado */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 md:p-12 shadow-sm transition-all duration-500 hover:shadow-md relative overflow-hidden">
-        {/* Detalhe estético em background */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary-light/30 rounded-bl-full pointer-events-none -z-10" />
+      <div className="bg-white rounded-3xl border border-brand-gray-surface p-8 md:p-12 shadow-sm transition-all duration-500 hover:shadow-md relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-teal-light/50 rounded-bl-full pointer-events-none -z-10" />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           {/* Coluna 1: Ícone */}
           <div className="md:col-span-3 flex justify-center">
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-secondary-light text-secondary animate-pulse shadow-sm">
+            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-brand-teal-light text-brand-teal shadow-sm border border-brand-teal/20">
               <ActiveIcon className="h-12 w-12" />
             </div>
           </div>
 
           {/* Coluna 2: Informações */}
-          <div className="md:col-span-9 space-y-4 text-center md:text-left">
+          <div className="md:col-span-9 space-y-3 text-center md:text-left">
             <div className="space-y-1">
-              <span className="text-xs font-bold text-secondary uppercase tracking-widest">
-                Marco Histórico - Ano {events[activeIndex].year}
+              <span className="text-xs font-black text-brand-orange uppercase tracking-widest">
+                Marco Histórico • Ano {events[activeIndex].year}
               </span>
               <h3 className="text-2xl font-black text-slate-800 tracking-tight">
                 {events[activeIndex].title}
@@ -146,12 +145,12 @@ export default function Timeline() {
           </div>
         </div>
 
-        {/* Botões de Navegação Rápidos */}
+        {/* Botões de Navegação */}
         <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
           <button
             onClick={prevEvent}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors focus:outline-none"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal-light hover:bg-brand-teal hover:text-white text-brand-teal transition-colors focus:outline-none"
             aria-label="Voltar marco histórico"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -159,7 +158,7 @@ export default function Timeline() {
           <button
             onClick={nextEvent}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors focus:outline-none"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal-light hover:bg-brand-teal hover:text-white text-brand-teal transition-colors focus:outline-none"
             aria-label="Avançar marco histórico"
           >
             <ArrowRight className="h-5 w-5" />

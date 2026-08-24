@@ -10,9 +10,9 @@ import { NewsPost } from '@/types';
 import { deleteNewsAction, toggleNewsStatusAction } from '@/app/admin/noticias/actions';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Cursos':             'bg-primary/10 text-primary',
-  'Eventos e Campanhas':'bg-secondary/10 text-secondary',
-  'Parcerias':          'bg-violet-100 text-violet-700',
+  'Cursos':             'bg-brand-teal-light text-brand-teal',
+  'Eventos e Campanhas':'bg-brand-orange-light text-brand-orange',
+  'Parcerias':          'bg-purple-100 text-purple-700',
   'Impacto':            'bg-emerald-100 text-emerald-700',
   'Artigos':            'bg-amber-100 text-amber-700',
   'Imprensa':           'bg-slate-100 text-slate-600',
@@ -108,7 +108,7 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
         </select>
         <Link
           href="/admin/noticias/nova"
-          className="inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-secondary-hover transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors whitespace-nowrap"
         >
           <Plus className="h-4 w-4" /> Nova Notícia
         </Link>

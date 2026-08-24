@@ -202,7 +202,7 @@ export default function MensagensAdmin({ initialMessages }: { initialMessages: C
                 <button
                   onClick={() => handleUpdateStatus(selectedMsg.id, 'respondido')}
                   disabled={updatingId === selectedMsg.id}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary-hover transition-colors disabled:opacity-60"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-teal px-4 py-3 text-sm font-bold text-white shadow-md shadow-brand-teal/20 hover:bg-brand-teal-dark transition-colors disabled:opacity-60"
                 >
                   {updatingId === selectedMsg.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
                   Marcar como Respondido

@@ -122,7 +122,7 @@ export default function AgendaCrudList({ initialCourses }: AgendaCrudListProps) 
 
         <Link
           href="/admin/agenda/novo"
-          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-md shadow-primary/10 hover:bg-primary-hover active:scale-[0.98] transition-all focus:outline-none"
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-orange px-5 py-3 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark active:scale-[0.98] transition-all focus:outline-none"
         >
           <Plus className="h-4.5 w-4.5" />
           Novo Curso

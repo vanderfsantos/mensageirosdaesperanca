@@ -16,12 +16,12 @@ const ROLE_CONFIG: Record<string, { label: string; color: string; desc: string }
   },
   editor: {
     label: 'Editor de Conteúdo',
-    color: 'bg-primary/10 text-primary border-primary/20',
+    color: 'bg-brand-teal-light text-brand-teal border-brand-teal/20',
     desc: 'Criação e edição de cursos, notícias e histórias',
   },
   comunicacao: {
     label: 'Comunicação e Redes',
-    color: 'bg-secondary/10 text-secondary border-secondary/20',
+    color: 'bg-brand-orange-light text-brand-orange border-brand-orange/20',
     desc: 'Gestão de notícias e respostas a contatos',
   },
 };
@@ -465,7 +465,7 @@ export default function UsuariosAdmin({ initialUsers }: { initialUsers: AdminPro
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex-1 rounded-xl bg-primary py-3 text-sm font-bold text-white hover:bg-primary-hover disabled:opacity-60 flex items-center justify-center gap-2"
+                className="flex-1 rounded-xl bg-brand-orange py-3 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {isSaving ? 'Salvando...' : 'Salvar'}

@@ -10,9 +10,9 @@ import { ImpactStory } from '@/types';
 import { deleteStoryAction } from '@/app/admin/historias/actions';
 
 const ROLE_CONFIG: Record<string, { label: string; color: string }> = {
-  participante:  { label: 'Participante',  color: 'bg-primary/10 text-primary' },
-  empreendedor:  { label: 'Empreendedor',  color: 'bg-secondary/10 text-secondary' },
-  voluntario:    { label: 'Voluntário/Educador', color: 'bg-violet-100 text-violet-700' },
+  participante:  { label: 'Participante',  color: 'bg-brand-teal-light text-brand-teal' },
+  empreendedor:  { label: 'Empreendedor',  color: 'bg-brand-orange-light text-brand-orange' },
+  voluntario:    { label: 'Voluntário/Educador', color: 'bg-purple-100 text-purple-700' },
   parceiro:      { label: 'Parceiro',      color: 'bg-amber-100 text-amber-700' },
 };
 
@@ -82,7 +82,7 @@ export default function HistoriasCrudList({ initialStories }: { initialStories: 
         </select>
         <Link
           href="/admin/historias/nova"
-          className="inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-secondary-hover transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-2 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors whitespace-nowrap"
         >
           <Plus className="h-4 w-4" /> Nova História
         </Link>

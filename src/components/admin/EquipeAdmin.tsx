@@ -192,7 +192,7 @@ export default function EquipeAdmin({ initialMembers }: { initialMembers: TeamMe
 
             <div className="flex gap-3 pt-2">
               <button onClick={() => setShowModal(false)} disabled={isSaving} className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancelar</button>
-              <button onClick={handleSave} disabled={isSaving} className="flex-1 rounded-xl bg-primary py-3 text-sm font-bold text-white hover:bg-primary-hover disabled:opacity-60 flex items-center justify-center gap-2">
+              <button onClick={handleSave} disabled={isSaving} className="flex-1 rounded-xl bg-brand-orange py-3 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark disabled:opacity-60 flex items-center justify-center gap-2">
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {isSaving ? 'Salvando...' : 'Salvar'}
               </button>
