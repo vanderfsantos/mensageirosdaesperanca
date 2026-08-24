@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import * as mockData from './mock-data';
-import { CourseEvent, NewsPost, ImpactStory, TransparencyDoc, TeamMember } from '../types';
+import { CourseEvent, NewsPost, ImpactStory, TransparencyDoc, TeamMember, ContactMessage } from '../types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -258,3 +258,40 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     return mockData.teamMembers;
   }
 }
+
+/**
+ * Busca todas as mensagens recebidas via formulários de contato e canal de escuta.
+ */
+export async function getContactMessages(): Promise<ContactMessage[]> {
+  if (!supabase) return mockData.contactMessages;
+  try {
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .select('*')
+      .order('received_at', { ascending: false });
+
+    if (error || !data) throw error || new Error('Nenhum dado retornado.');
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      email: item.email,
+      phone: item.phone || undefined,
+      subject: item.subject,
+      message: item.message,
+      status: item.status || 'pendente',
+      isAnonymous: item.is_anonymous || false,
+      receivedAt: item.received_at
+        ? new Date(item.received_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace('.', '')
+        : 'Recente',
+      resolvedAt: item.resolved_at
+        ? new Date(item.resolved_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace('.', '')
+        : undefined,
+    }));
+  } catch (err) {
+    console.warn('Supabase: Falha ao obter contact_messages, usando mock-data local.', err);
+    return mockData.contactMessages;
+  }
+}
+

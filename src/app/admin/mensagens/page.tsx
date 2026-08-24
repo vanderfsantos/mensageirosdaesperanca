@@ -1,13 +1,13 @@
-import { contactMessages } from '@/lib/mock-data';
+import { getContactMessages } from '@/lib/supabaseClient';
 import MensagensAdmin from '@/components/admin/MensagensAdmin';
 import { Inbox } from 'lucide-react';
 
 export const metadata = { title: 'Caixa de Entrada | Admin — Mensageiros da Esperança' };
 
-export default function AdminMensagensPage() {
-  const messages = [...contactMessages].sort((a, b) =>
-    b.receivedAt.localeCompare(a.receivedAt)
-  );
+export const dynamic = 'force-dynamic';
+
+export default async function AdminMensagensPage() {
+  const messages = await getContactMessages();
 
   const pendingCount = messages.filter((m) => m.status === 'pendente').length;
   const anonymousCount = messages.filter((m) => m.isAnonymous).length;
@@ -28,7 +28,7 @@ export default function AdminMensagensPage() {
         <div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">Caixa de Entrada</h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            {messages.length} mensagens recebidas •{' '}
+            {messages.length} {messages.length === 1 ? 'mensagem recebida' : 'mensagens recebidas'} •{' '}
             {pendingCount > 0
               ? <span className="text-amber-600 font-semibold">{pendingCount} pendentes</span>
               : <span className="text-emerald-600 font-semibold">todas respondidas</span>}
