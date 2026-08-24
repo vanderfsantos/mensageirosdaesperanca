@@ -4,11 +4,12 @@ import {
   Calendar, 
   FileText, 
   Layers, 
-  Users, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Plus,
+  Heart
 } from 'lucide-react';
-import { courseEvents, newsPosts, transparencyDocs, teamMembers } from '@/lib/mock-data';
+import { courseEvents, newsPosts, transparencyDocs, impactStories } from '@/lib/mock-data';
 
 export const metadata = {
   title: 'Dashboard Geral | Painel Mensageiros da Esperança',
@@ -16,17 +17,18 @@ export const metadata = {
 };
 
 export default function AdminDashboardPage() {
-  // Métricas rápidas baseadas nos dados do mock
+  // Métricas dinâmicas do sistema
   const totalCursos = courseEvents.length;
   const totalNoticias = newsPosts.length;
   const totalDocumentos = transparencyDocs.length;
-  const totalEquipe = teamMembers.length;
+  const totalHistorias = impactStories.length;
+  const mensagensNaoLidas = 5; // Simulação de mensagens pendentes do formulário de contato
 
   const cardMetricas = [
-    { label: 'Cursos & Oficinas', val: totalCursos, desc: 'Ativos na agenda pública', path: '/admin/agenda', icon: Calendar, color: 'text-primary bg-primary-light' },
-    { label: 'Notícias Publicadas', val: totalNoticias, desc: 'Publicações no blog social', path: '/admin/noticias', icon: FileText, color: 'text-blue-600 bg-blue-50' },
-    { label: 'Transparência Legal', val: totalDocumentos, desc: 'Arquivos de prestação de contas', path: '/admin/transparencia', icon: Layers, color: 'text-purple-600 bg-purple-50' },
-    { label: 'Equipe de Governança', val: totalEquipe, desc: 'Lideranças e coordenações', path: '/admin/equipe', icon: Users, color: 'text-orange-600 bg-orange-50' },
+    { label: 'Cursos & Oficinas', val: totalCursos, desc: 'Ativos na agenda pública', path: '/admin/agenda', icon: Calendar, color: 'text-teal-600 bg-teal-50 border-teal-200' },
+    { label: 'Notícias Publicadas', val: totalNoticias, desc: 'Artigos no portal social', path: '/admin/noticias', icon: FileText, color: 'text-blue-600 bg-blue-50 border-blue-200' },
+    { label: 'Histórias de Impacto', val: totalHistorias, desc: 'Relatos de transformação', path: '/admin/historias', icon: Heart, color: 'text-rose-600 bg-rose-50 border-rose-200' },
+    { label: 'Transparência Legal', val: totalDocumentos, desc: 'Relatórios de contas (MROSC)', path: '/admin/transparencia', icon: Layers, color: 'text-purple-600 bg-purple-50 border-purple-200' },
   ];
 
   return (
@@ -37,13 +39,13 @@ export default function AdminDashboardPage() {
         
         <div className="space-y-1.5 relative z-10">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-primary-light text-xs font-bold uppercase tracking-wider">
-            <ShieldCheck className="h-3.5 w-3.5 text-secondary" /> Ambiente Seguro
+            <ShieldCheck className="h-3.5 w-3.5 text-secondary animate-pulse" /> Ambiente Seguro
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Olá, Administrador(a)
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-light">
-            Bem-vindo(a) ao painel de controle da OSC **Mensageiros da Esperança**. Aqui você pode gerenciar a agenda de oficinas gratuitas, publicar notícias de impacto social, prestar contas de transparência e visualizar contatos comunitários.
+            Bem-vindo(a) ao painel de controle da OSC **Mensageiros da Esperança**. Publique oportunidades, gerencie dados de compliance legal e visualize relatos de impacto comunitário.
           </p>
         </div>
 
@@ -57,9 +59,59 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Seção de Ações Rápidas (Novo Requisito) */}
+      <div className="space-y-4">
+        <h3 className="font-extrabold text-slate-800 text-base">Atalhos e Ações Rápidas</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Novo Curso */}
+          <Link
+            href="/admin/agenda/novo"
+            className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200/60 rounded-2xl text-slate-700 hover:border-primary hover:text-primary transition-all text-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
+          >
+            <div className="h-10 w-10 bg-primary-light text-primary rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+              <Plus className="h-5 w-5" />
+            </div>
+            <span className="font-bold text-xs sm:text-sm">Novo Curso</span>
+          </Link>
+
+          {/* Nova Notícia */}
+          <Link
+            href="/admin/noticias/nova"
+            className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200/60 rounded-2xl text-slate-700 hover:border-primary hover:text-primary transition-all text-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
+          >
+            <div className="h-10 w-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+              <Plus className="h-5 w-5" />
+            </div>
+            <span className="font-bold text-xs sm:text-sm">Nova Notícia</span>
+          </Link>
+
+          {/* Novo Link Drive */}
+          <Link
+            href="/admin/transparencia/novo"
+            className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200/60 rounded-2xl text-slate-700 hover:border-primary hover:text-primary transition-all text-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
+          >
+            <div className="h-10 w-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+              <Plus className="h-5 w-5" />
+            </div>
+            <span className="font-bold text-xs sm:text-sm">Novo Link Drive</span>
+          </Link>
+
+          {/* Nova História */}
+          <Link
+            href="/admin/historias/nova"
+            className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200/60 rounded-2xl text-slate-700 hover:border-primary hover:text-primary transition-all text-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
+          >
+            <div className="h-10 w-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+              <Plus className="h-5 w-5" />
+            </div>
+            <span className="font-bold text-xs sm:text-sm">Nova História</span>
+          </Link>
+        </div>
+      </div>
+
       {/* Grid de Métricas do Sistema */}
       <div className="space-y-4">
-        <h3 className="font-extrabold text-slate-800 text-base">Visão Geral do Painel</h3>
+        <h3 className="font-extrabold text-slate-800 text-base font-sans">Visão Geral do Painel</h3>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {cardMetricas.map((metric, index) => {
@@ -73,7 +125,7 @@ export default function AdminDashboardPage() {
                   <span className="text-3xl font-black text-slate-850 tracking-tight">
                     {metric.val}
                   </span>
-                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${metric.color}`}>
+                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${metric.color} border`}>
                     <IconComponent className="h-5 w-5" />
                   </div>
                 </div>
@@ -96,47 +148,48 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Linha com Cards de Ações Rápidas */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">
-        {/* Lema Institucional */}
-        <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col justify-between space-y-6">
+      {/* Linha Inferior: Central de Contato & Informações Suporte */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
+        {/* Bloco de Mensagens de Contato pendentes */}
+        <div className="lg:col-span-7 bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm space-y-6 flex flex-col justify-between">
           <div className="space-y-3">
-            <span className="text-xs font-black tracking-widest text-primary uppercase bg-primary-light px-3 py-1.5 rounded-full">
-              Lema de Trabalho
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-amber-50 border border-amber-250 text-amber-800 text-[10px] font-black uppercase tracking-wider">
+              Central de Atendimento
             </span>
-            <h4 className="text-lg font-extrabold text-slate-800 leading-snug">
-              Você não faz parte do problema, mas pode fazer parte da solução!
+            <h4 className="text-lg font-extrabold text-slate-800">
+              Você tem {mensagensNaoLidas} novas mensagens pendentes
             </h4>
             <p className="text-slate-500 text-sm leading-relaxed">
-              Lembre-se de que cada ação executada neste painel reflete diretamente na transparência de dados públicos consumidos por doadores e voluntários e na facilidade de matrícula dos nossos alunos.
+              Existem contatos enviados pelo formulário público do site aguardando atendimento ou roteamento de assunto para a coordenação.
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="pt-2 flex items-center justify-between border-t border-slate-100">
             <Link
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-primary transition-colors"
+              href="/admin/mensagens"
+              className="inline-flex items-center gap-1.5 text-xs font-black text-primary hover:text-primary-hover uppercase tracking-wider"
             >
-              Ir para o Site Público <ArrowRight className="h-3.5 w-3.5" />
+              Responder Mensagens <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Assuntos: Cursos, Voluntariado, ESG</span>
           </div>
         </div>
 
         {/* Informações de Suporte Técnico */}
-        <div className="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm space-y-4">
-          <span className="text-xs font-black tracking-widest text-slate-400 uppercase">
-            Suporte e Auditoria
-          </span>
-          <h4 className="text-lg font-extrabold text-slate-800 leading-snug">
-            Gestão Compartilhada ESG
-          </h4>
-          <p className="text-slate-500 text-sm leading-relaxed">
-            Se precisar realizar cadastros em massa de novos alunos, configurar integrações de banco de dados nativas ou auditar acessos, contate o setor de TI e Compliance do <strong>Instituto Inovação Sustentável</strong>.
-          </p>
+        <div className="lg:col-span-5 bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm space-y-4 flex flex-col justify-between">
+          <div className="space-y-3">
+            <span className="text-xs font-black tracking-widest text-slate-400 uppercase">
+              TI e Compliance
+            </span>
+            <h4 className="text-lg font-extrabold text-slate-800 leading-snug">
+              Gestão Corporativa ESG
+            </h4>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              O gerenciamento e relatórios de auditoria de acessos são mantidos sob cooperação técnica do <strong>Instituto Inovação Sustentável</strong>.
+            </p>
+          </div>
           <div className="pt-2">
-            <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-500 px-3.5 py-1.5 rounded-full text-xs font-bold">
-              Contato TI: suporte@instituto-inovacao.org
+            <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-500 px-3.5 py-1.5 rounded-full text-[10px] font-bold">
+              suporte@instituto-inovacao.org
             </span>
           </div>
         </div>
