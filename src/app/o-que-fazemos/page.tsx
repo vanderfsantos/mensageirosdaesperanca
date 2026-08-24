@@ -1,0 +1,280 @@
+import React from 'react';
+import { 
+  TrendingUp, 
+  Brain, 
+  Lightbulb, 
+  Wrench, 
+  GraduationCap, 
+  Heart, 
+  ShieldAlert, 
+  Compass
+} from 'lucide-react';
+import Link from 'next/link';
+
+export const metadata = {
+  title: 'O Que Fazemos | Mensageiros da Esperança',
+  description: 'Descubra a metodologia pedagógica, os 4 pilares e os projetos de capacitação e proteção social desenvolvidos pela OSC Mensageiros da Esperança.',
+};
+
+export default function OQueFazemos() {
+  const pilares = [
+    {
+      title: 'Empreendedorismo',
+      description: 'Capacitamos pessoas para o planejamento comercial, controle financeiro básico e formalização de micro-negócios, promovendo a autonomia de renda.',
+      Icon: TrendingUp,
+    },
+    {
+      title: 'Inclusão Produtiva',
+      description: 'Oferecemos formação técnica célere e alinhada com as demandas locais do mercado (Cozinha Industrial, TI, Audiovisual) para inserção real de alunos.',
+      Icon: Wrench,
+    },
+    {
+      title: 'Educação Emocional',
+      description: 'Integramos suporte psicossocial contínuo e rodas de partilha às oficinas, fortalecendo a resiliência e as relações familiares de forma integrada.',
+      Icon: Brain,
+    },
+    {
+      title: 'Inovação',
+      description: 'Aplicamos novas metodologias digitais e soluções criativas para solucionar problemas crônicos da comunidade, fomentando a cidadania ativa.',
+      Icon: Lightbulb,
+    },
+  ];
+
+  const capacitacoes = [
+    {
+      title: 'Jovens & Tecnologia',
+      target: 'Jovens de 15 a 24 anos',
+      description: 'Oficinas focadas em alfabetização tecnológica completa, lógica de programação básica, letramento digital para mercado administrativo e suporte no desenvolvimento de currículos e preparação para processos seletivos do primeiro emprego.',
+      details: ['Informática para Escritório', 'Introdução à Lógica e Web', 'Orientação Vocacional'],
+    },
+    {
+      title: 'Mulheres & Emancipação',
+      target: 'Mulheres e mães solo',
+      description: 'Qualificação profissional e empoderamento por meio da Cozinha Industrial e Confeitaria Comunitária. Além do ensino culinário, promovemos rodas de apoio sobre liderança feminina, direitos básicos e suporte à saúde mental.',
+      details: ['Panificação e Confeitaria', 'Gastronomia para Eventos', 'Relações Humanas e Autocuidado'],
+    },
+    {
+      title: 'Empreendedores Locais',
+      target: 'Microempreendedores e produtores comunitários',
+      description: 'Mentoria básica focada em desenvolver competências de gestão financeira familiar/comercial, estratégias de divulgação de produtos através de redes sociais locais, precificação correta de mercadorias e planejamento de vendas.',
+      details: ['Finanças Descomplicadas', 'Divulgação Digital Básica', 'Modelagem de Negócios Sociais'],
+    },
+  ];
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {/* Header Banner */}
+      <section className="bg-gradient-to-r from-primary to-primary-hover text-white py-16 px-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center lg:text-left">
+          <h1 className="text-4xl font-extrabold tracking-tight">O Que Fazemos</h1>
+          <p className="text-primary-light mt-2 text-lg font-light max-w-xl">
+            A educação profissional e o cuidado social como chaves para a emancipação e cidadania.
+          </p>
+        </div>
+      </section>
+
+      {/* Metodologia Pedagógica baseada na LDB */}
+      <section className="py-20 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Texto Descritivo */}
+            <div className="lg:col-span-7 space-y-6">
+              <span className="text-xs font-black tracking-widest text-primary uppercase bg-primary-light px-3 py-1.5 rounded-full">
+                Metodologia Ativa
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                O Trabalho como Princípio Educativo (LDB)
+              </h2>
+              <div className="h-1.5 w-16 bg-secondary rounded-full" />
+              
+              <div className="space-y-4 text-slate-600 leading-relaxed text-base">
+                <p>
+                  Nossa matriz de ensino e atuação fundamenta-se nos princípios da <strong>Lei de Diretrizes e Bases da Educação Nacional (LDB)</strong>, compreendendo que a educação se vincula estreitamente ao mundo do trabalho e às práticas sociais.
+                </p>
+                <p>
+                  Defendemos a tese pedagógica do <strong>trabalho como princípio educativo</strong>: o fazer técnico e manual não é um fim em si mesmo, mas um organizador cognitivo e social. Através das oficinas de panificação, TI e audiovisual, nossos alunos não apenas aprendem uma profissão, mas debatem sobre cooperação, ética cidadã, inovação comunitária e dignidade social, tornando-se agentes ativos da própria vida.
+                </p>
+              </div>
+            </div>
+
+            {/* Destaque Visual Metodológico */}
+            <div className="lg:col-span-5 bg-neutral-bg p-8 rounded-3xl border border-slate-200/80 shadow-inner flex flex-col justify-center items-center text-center">
+              <GraduationCap className="h-16 w-16 text-primary mb-4" />
+              <h3 className="text-lg font-extrabold text-slate-800">Cidadania Integral</h3>
+              <p className="text-sm text-slate-500 mt-2">Nossas oficinas são elaboradas sob a ótica de que o conhecimento liberta, reconstrói identidades e garante a autonomia humana.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Os 4 Pilares da Atuação */}
+      <section className="py-20 bg-neutral-bg border-t border-b border-slate-200/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span className="text-sm font-extrabold text-secondary uppercase tracking-widest">
+              Sustentação Pedagógica
+            </span>
+            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              Nossos 4 Pilares Fundamentais
+            </h2>
+            <div className="h-1.5 w-16 bg-secondary mx-auto rounded-full" />
+            <p className="text-slate-600">
+              Guiamos o planejamento de todas as oficinas livres e assistências sob uma abordagem sistêmica de desenvolvimento humano.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {pilares.map((pilar) => {
+              const PilarIcon = pilar.Icon;
+              return (
+                <div 
+                  key={pilar.title}
+                  className="group bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden"
+                >
+                  <div className="space-y-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                      <PilarIcon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-800 group-hover:text-primary transition-colors">
+                      {pilar.title}
+                    </h3>
+                    <p className="text-slate-500 text-sm leading-relaxed">
+                      {pilar.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Detalhamento das áreas de capacitação pedagógica */}
+      <section className="py-24 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span className="text-sm font-extrabold text-primary uppercase tracking-widest">
+              Público-Alvo e Cursos
+            </span>
+            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              Áreas de Capacitação e Oficinas
+            </h2>
+            <div className="h-1.5 w-16 bg-primary mx-auto rounded-full" />
+            <p className="text-slate-600">
+              Estruturamos programas focados nas principais carências e potencialidades de desenvolvimento na comunidade.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {capacitacoes.map((cap) => (
+              <div 
+                key={cap.title}
+                className="bg-neutral-bg p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between"
+              >
+                <div className="space-y-4">
+                  <span className="text-xs font-bold text-secondary uppercase bg-secondary-light px-2.5 py-1 rounded">
+                    {cap.target}
+                  </span>
+                  <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">
+                    {cap.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    {cap.description}
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-200/60">
+                  <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">
+                    Principais Componentes:
+                  </h4>
+                  <ul className="space-y-2">
+                    {cap.details.map((detail, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                        <span className="h-1.5 w-1.5 bg-primary rounded-full shrink-0" />
+                        {detail}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ações de Proteção Social e Assistencial */}
+      <section className="py-24 bg-secondary-light/25 border-t border-b border-secondary/10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Box Detalhado das Frentes de Cuidado */}
+            <div className="lg:col-span-7 space-y-6 order-2 lg:order-1">
+              <span className="text-xs font-black tracking-widest text-secondary uppercase bg-secondary-light px-3 py-1.5 rounded-full">
+                Proteção Social
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                Cuidado e Assistência Social Integrada
+              </h2>
+              <p className="text-slate-600 leading-relaxed text-base">
+                Nossa atuação não é puramente educacional. Compreendemos que famílias em extrema carência física e psicológica necessitam de acolhimento e proteção de forma imediata antes e durante os processos de capacitação.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2.5 text-secondary">
+                    <ShieldAlert className="h-5 w-5 shrink-0" />
+                    <h4 className="font-extrabold text-slate-800 text-sm">Triagem Social</h4>
+                  </div>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                    Nossa equipe de assistentes sociais faz o cadastramento e acompanhamento contínuo da vulnerabilidade socioeconômica local.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2.5 text-secondary">
+                    <Heart className="h-5 w-5 shrink-0" />
+                    <h4 className="font-extrabold text-slate-800 text-sm">Acolhimento Individual</h4>
+                  </div>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                    Atendimento psicológico individual e coletivo para reestruturação emocional e superação de traumas familiares e sociais.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2.5 text-secondary">
+                    <Compass className="h-5 w-5 shrink-0" />
+                    <h4 className="font-extrabold text-slate-800 text-sm">Bazar & Alimentação</h4>
+                  </div>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                    Distribuição programada de mantimentos de qualidade e bazar de roupas gratuito para todas as famílias cadastradas.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Chamada para Apoiar */}
+            <div className="lg:col-span-5 bg-white p-8 rounded-3xl border border-slate-200/80 shadow-md space-y-6 order-1 lg:order-2">
+              <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">
+                Como manter essas ações ativas?
+              </h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Cada oficina, computador disponível na sala de informática, forno aceso da panificação ou atendimento social de acolhimento emergencial é viabilizado por meio de doações. Colabore e mude realidades conosco.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/#doe"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-4 text-base font-bold text-white shadow-md shadow-secondary/15 hover:bg-secondary-hover hover:scale-102 transition-all focus:outline-none"
+                >
+                  FAÇA UMA DOAÇÃO AGORA
+                </Link>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
