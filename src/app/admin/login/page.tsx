@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import { 
   Lock, 
   Mail, 
@@ -156,6 +158,22 @@ export default function LoginPage() {
           </div>
         </form>
 
+        {/* Links de Navegação */}
+        <div className="flex items-center justify-between text-xs">
+          <Link
+            href="/admin/cadastro"
+            className="text-slate-500 font-semibold hover:text-primary transition-colors"
+          >
+            Criar nova conta
+          </Link>
+          <Link
+            href="/admin/esqueci-senha"
+            className="text-slate-500 font-semibold hover:text-primary transition-colors"
+          >
+            Esqueci minha senha
+          </Link>
+        </div>
+
         {/* Informação Resiliente de Mock local */}
         {(!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) && (
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center">
@@ -165,6 +183,7 @@ export default function LoginPage() {
             </p>
           </div>
         )}
+
 
       </div>
     </div>

@@ -1,6 +1,14 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// Rotas administrativas públicas — não exigem autenticação
+const PUBLIC_ADMIN_ROUTES = [
+  '/admin/login',
+  '/admin/cadastro',
+  '/admin/esqueci-senha',
+  '/admin/redefinir-senha',
+];
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -10,20 +18,25 @@ export async function middleware(request: NextRequest) {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-  
-  const isLoginRoute = request.nextUrl.pathname === '/admin/login';
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
 
-  // Modo de Simulação (Mock Auth) na ausência das chaves de ambiente do Supabase
+  const pathname = request.nextUrl.pathname;
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isPublicAdminRoute = PUBLIC_ADMIN_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+
+  // ── Modo de Simulação (Mock Auth) — Supabase não configurado ──────────────
   if (!supabaseUrl || !supabaseAnonKey) {
     const mockSession = request.cookies.get('mock-session')?.value;
 
-    if (isAdminRoute && !isLoginRoute && !mockSession) {
+    // Rota protegida sem sessão mock → redireciona para login
+    if (isAdminRoute && !isPublicAdminRoute && !mockSession) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
 
-    if (isLoginRoute && mockSession) {
+    // Usuário com sessão mock tenta acessar login → redireciona para dashboard
+    if (pathname === '/admin/login' && mockSession) {
       const redirectUrl = new URL('/admin', request.url);
       return NextResponse.redirect(redirectUrl);
     }
@@ -31,7 +44,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // Inicialização do Supabase SSR no Middleware
+  // ── Supabase SSR — Validação de Sessão Real ───────────────────────────────
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
@@ -39,9 +52,7 @@ export async function middleware(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({
-          request,
-        });
+        response = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
         );
@@ -50,22 +61,22 @@ export async function middleware(request: NextRequest) {
   });
 
   try {
-    // IMPORTANTE: Obter a sessão usando getUser() que é seguro e refresca o token via cookies
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user && !isLoginRoute) {
+    // Rota protegida sem usuário autenticado → login
+    if (!user && isAdminRoute && !isPublicAdminRoute) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
 
-    if (user && isLoginRoute) {
+    // Usuário autenticado tenta acessar login → dashboard
+    if (user && pathname === '/admin/login') {
       const redirectUrl = new URL('/admin', request.url);
       return NextResponse.redirect(redirectUrl);
     }
   } catch (err) {
     console.error('Middleware: Erro ao validar sessão no Supabase SSR', err);
-    // Em caso de erro técnico na autenticação, envia para a página de login
-    if (!isLoginRoute) {
+    if (isAdminRoute && !isPublicAdminRoute) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
