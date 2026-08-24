@@ -118,6 +118,8 @@ export async function getNewsPosts(): Promise<NewsPost[]> {
       date: item.date,
       author: item.author,
       readTime: item.read_time || undefined,
+      featured: item.featured ?? false,
+      publishedStatus: item.published_status ?? 'publicado',
     }));
   } catch (err) {
     console.warn('Supabase: Falha ao obter news_posts, usando mock-data local.', err);
@@ -152,6 +154,8 @@ export async function getNewsPostBySlug(slug: string): Promise<NewsPost | null> 
       date: data.date,
       author: data.author,
       readTime: data.read_time || undefined,
+      featured: data.featured ?? false,
+      publishedStatus: data.published_status ?? 'publicado',
     };
   } catch (err) {
     console.warn(`Supabase: Falha ao obter notícia pelo slug ${slug}, usando mock-data local.`, err);
@@ -178,10 +182,12 @@ export async function getImpactStories(): Promise<ImpactStory[]> {
       name: item.name,
       age: item.age ?? undefined,
       role: item.role,
-      story: item.story,
-      quote: item.quote,
-      imageUrl: item.image_url,
       project: item.project,
+      quote: item.quote,
+      story: item.story,
+      imageUrl: item.image_url,
+      videoUrl: item.video_url ?? undefined,
+      lgpdConsent: item.lgpd_consent ?? false,
     }));
   } catch (err) {
     console.warn('Supabase: Falha ao obter impact_stories, usando mock-data local.', err);

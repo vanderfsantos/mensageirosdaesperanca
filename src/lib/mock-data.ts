@@ -135,10 +135,12 @@ export const newsPosts: NewsPost[] = [
     excerpt: 'Com a parceria estratégica do Instituto Inovação Sustentável, a comunidade agora conta com 15 computadores modernos e internet banda larga de alta velocidade.',
     content: 'Temos o orgulho de anunciar a tempo a inauguração da nossa nova Sala de Inclusão Digital. Esse espaço foi projetado para oferecer acesso gratuito à internet, capacitação tecnológica e mentorias profissionais para jovens e adultos do bairro. O projeto foi viabilizado através do aporte do Instituto Inovação Sustentável e doações da comunidade civil. Os novos computadores permitirão triplicar o número de alunos atendidos anualmente em nossos cursos livres e preparatórios.',
     imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop',
-    category: 'Conquistas',
+    category: 'Impacto',
     date: '20 Fev 2026',
     author: 'Juliana Costa',
-    readTime: '3 min de leitura'
+    readTime: '3 min de leitura',
+    featured: true,
+    publishedStatus: 'publicado',
   },
   {
     id: '2',
@@ -147,10 +149,12 @@ export const newsPosts: NewsPost[] = [
     excerpt: 'Graças ao engajamento de nossos voluntários e doadores, conseguimos arrecadar mais de 600 cobertores e agasalhos na primeira fase da campanha.',
     content: 'O inverno se aproxima e a solidariedade aquece vidas. A primeira fase da Campanha de Agasalho 2026 foi um sucesso absoluto. Foram arrecadados e distribuídos agasados infantis, mantas e cobertores de alta qualidade para 185 famílias cadastradas em nossos programas de assistência social direta. Agradecemos a todos que doaram nos pontos de coleta parceiros. A campanha continua ativa e novas distribuições ocorrerão nas próximas semanas.',
     imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop',
-    category: 'Campanhas',
+    category: 'Eventos e Campanhas',
     date: '15 Fev 2026',
     author: 'Marcos Oliveira',
-    readTime: '4 min de leitura'
+    readTime: '4 min de leitura',
+    featured: false,
+    publishedStatus: 'publicado',
   },
   {
     id: '3',
@@ -159,10 +163,12 @@ export const newsPosts: NewsPost[] = [
     excerpt: 'Projeto de futebol e artes marciais reduz a evasão escolar e promove integração social e saúde no contraturno escolar.',
     content: 'Nosso projeto esportivo "Mover a Vida" completa dois anos com dados impressionantes: 95% dos participantes frequentes apresentaram melhoria em suas notas escolares e frequência de aulas. Além do desenvolvimento físico e motor, os jovens aprendem lições valiosas de disciplina, respeito mútuo e trabalho em equipe. Conheça as histórias das nossas crianças e saiba como contribuir com equipamentos esportivos ou apadrinhando um atleta juvenil.',
     imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=800&auto=format&fit=crop',
-    category: 'Projetos',
+    category: 'Artigos',
     date: '02 Fev 2026',
     author: 'Ricardo Mendes',
-    readTime: '5 min de leitura'
+    readTime: '5 min de leitura',
+    featured: false,
+    publishedStatus: 'rascunho',
   }
 ];
 
@@ -172,42 +178,47 @@ export const impactStories: ImpactStory[] = [
     name: 'Maria do Socorro Souza',
     age: 42,
     role: 'empreendedor',
-    story: 'Após perder o emprego formal na pandemia, Maria encontrou dificuldades para reingressar no mercado devido à idade e falta de qualificação específica. Ao participar do curso de Panificação Comunitária da Mensageiros da Esperança, ela não apenas aprendeu uma profissão, mas também recebeu suporte empreendedor. Hoje ela produz e comercializa pães artesanais sob encomenda, sustentando sua casa de forma independente.',
+    project: 'Panificação Comunitária',
     quote: 'A Mensageiros da Esperança me deu mais do que uma receita de pão; eles me devolveram a dignidade de poder colocar comida na mesa com o meu próprio suor.',
+    story: 'Após perder o emprego formal na pandemia, Maria encontrou dificuldades para reingressar no mercado devido à idade e falta de qualificação específica. Ao participar do curso de Panificação Comunitária da Mensageiros da Esperança, ela não apenas aprendeu uma profissão, mas também recebeu suporte empreendedor. Hoje ela produz e comercializa pães artesanais sob encomenda, sustentando sua casa de forma independente.',
     imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
-    project: 'Panificação Comunitária'
+    lgpdConsent: true,
   },
   {
     id: '2',
     name: 'Carlos Eduardo Lima',
     age: 21,
     role: 'voluntario',
-    story: 'Carlos entrou na organização como aluno do curso de informática básica. Demonstrando grande aptidão técnica e dedicação para ajudar os colegas mais velhos, ele foi convidado a se tornar monitor voluntário do projeto. A experiência prática no ensino de tecnologias inspirou Carlos a ingressar na faculdade de Análise e Desenvolvimento de Sistemas. Atualmente, ele concilia o voluntariado com o estágio em uma multinacional de software.',
+    project: 'Inclusão Digital',
     quote: 'Comecei querendo aprender a usar o Word e hoje crio sistemas reais. Fazer parte da equipe de voluntários foi o que transformou meu destino profissional.',
+    story: 'Carlos entrou na organização como aluno do curso de informática básica. Demonstrando grande aptidão técnica e dedicação para ajudar os colegas mais velhos, ele foi convidado a se tornar monitor voluntário do projeto. A experiência prática no ensino de tecnologias inspirou Carlos a ingressar na faculdade de Análise e Desenvolvimento de Sistemas. Atualmente, ele concilia o voluntariado com o estágio em uma multinacional de software.',
     imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
-    project: 'Inclusão Digital'
+    lgpdConsent: true,
   },
   {
     id: '3',
     name: 'Helena Pires Camargo',
     age: 58,
     role: 'parceiro',
-    story: 'Moradora vizinha da sede, dona Helena começou ajudando a organizar as prateleiras de doações no bazar beneficente. Impressionada com a lisura operacional e o impacto nítido nas crianças do bairro, ela decidiu formalizar doações financeiras mensais e mobilizou sua rede de contatos profissionais para apoiar a OSC com recursos permanentes.',
+    project: 'Bazar Beneficente',
     quote: 'Apoiar o trabalho da Mensageiros é ver a solidariedade acontecer a poucos metros da minha janela. Cada centavo investido gera transformações reais no olhar das nossas crianças.',
+    story: 'Moradora vizinha da sede, dona Helena começou ajudando a organizar as prateleiras de doações no bazar beneficente. Impressionada com a lisura operacional e o impacto nítido nas crianças do bairro, ela decidiu formalizar doações financeiras mensais e mobilizou sua rede de contatos profissionais para apoiar a OSC com recursos permanentes.',
     imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop',
-    project: 'Bazar Beneficente'
+    lgpdConsent: true,
   },
   {
     id: '4',
     name: 'Jefferson Silva',
     age: 19,
     role: 'participante',
-    story: 'Jefferson vivia sem perspectivas profissionais ao terminar o ensino médio em escola pública. Inscreveu-se no curso de Informática Básica da Mensageiros da Esperança, onde obteve excelente rendimento. Orientado por nossa assistente social, participou de processos seletivos e hoje atua como Jovem Aprendiz da área operacional de uma grande seguradora em São Paulo.',
+    project: 'Inclusão Digital',
     quote: 'A Mensageiros abriu meus olhos para um mundo de tecnologia e trabalho corporativo que eu nem sabia que existia. Consegui meu primeiro emprego.',
+    story: 'Jefferson vivia sem perspectivas profissionais ao terminar o ensino médio em escola pública. Inscreveu-se no curso de Informática Básica da Mensageiros da Esperança, onde obteve excelente rendimento. Orientado por nossa assistente social, participou de processos seletivos e hoje atua como Jovem Aprendiz da área operacional de uma grande seguradora em São Paulo.',
     imageUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop',
-    project: 'Inclusão Digital'
+    lgpdConsent: true,
   }
 ];
+
 
 export const transparencyDocs: TransparencyDoc[] = [
   {

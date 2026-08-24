@@ -27,10 +27,12 @@ export interface NewsPost {
   excerpt: string;
   content: string;
   imageUrl: string;
-  category: string;
+  category: 'Cursos' | 'Eventos e Campanhas' | 'Parcerias' | 'Impacto' | 'Artigos' | 'Imprensa';
   date: string;
   author: string;
   readTime?: string;
+  featured?: boolean;
+  publishedStatus: 'publicado' | 'rascunho';
 }
 
 export interface ImpactStory {
@@ -38,11 +40,14 @@ export interface ImpactStory {
   name: string;
   age?: number;
   role: 'participante' | 'empreendedor' | 'voluntario' | 'parceiro';
-  story: string;
-  quote: string;
-  imageUrl: string;
   project: string;
+  quote: string;
+  story: string;
+  imageUrl: string;
+  videoUrl?: string;
+  lgpdConsent: boolean;
 }
+
 
 export interface TransparencyDoc {
   id: string;
