@@ -19,14 +19,14 @@ export default function Logo({
   if (variant === 'icon-only') {
     return (
       <div className={`relative inline-flex items-center justify-center ${className}`}>
-        <div className="relative h-10 w-10 overflow-hidden rounded-full bg-brand-teal-light p-1 border border-brand-teal/20">
+        <div className="relative h-11 w-11 overflow-hidden rounded-full bg-brand-teal-light p-1 border border-brand-teal/20 shadow-sm">
           <Image
             src="/images/logo-mensageiros.png"
             alt="OSC Mensageiros da Esperança - Desde 1998"
-            width={40}
-            height={40}
+            width={48}
+            height={48}
             priority={priority}
-            className="h-full w-full object-contain scale-[1.9] object-left"
+            className="h-full w-full object-contain scale-[1.95] object-left"
           />
         </div>
       </div>
@@ -36,30 +36,30 @@ export default function Logo({
   if (variant === 'footer') {
     return (
       <div className={`flex flex-col gap-2 ${className}`}>
-        <div className="relative h-12 w-56">
+        <div className="relative h-16 sm:h-20 w-64 sm:w-80">
           <Image
             src="/images/logo-mensageiros.png"
             alt="OSC Mensageiros da Esperança - Desde 1998"
-            width={224}
-            height={48}
+            width={320}
+            height={80}
             priority={priority}
-            className="h-full w-auto object-contain brightness-110"
+            className="h-full w-auto object-contain brightness-125 filter drop-shadow"
           />
         </div>
       </div>
     );
   }
 
-  // Default: logo completo colorido com largura ~220px
+  // Default: logo completo colorido ampliado (~260px - 300px)
   return (
-    <div className={`relative inline-block h-12 w-52 sm:w-56 ${className}`}>
+    <div className={`relative inline-flex items-center h-14 sm:h-16 w-60 sm:w-72 ${className}`}>
       <Image
         src="/images/logo-mensageiros.png"
         alt="OSC Mensageiros da Esperança - Desde 1998"
-        width={224}
-        height={48}
+        width={300}
+        height={72}
         priority={priority}
-        className="h-full w-auto object-contain"
+        className="h-full w-auto object-contain max-h-full"
       />
     </div>
   );

@@ -105,8 +105,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Header da Sidebar em Teal Escuro */}
           <div className="flex h-20 items-center justify-between px-5 bg-brand-teal-dark border-b border-brand-teal/40 shrink-0">
             {isSidebarOpen ? (
-              <Link href="/admin" className="flex items-center gap-2 overflow-hidden">
-                <Logo variant="default" className="brightness-150 h-10 w-44" />
+              <Link href="/admin" className="flex items-center gap-2 overflow-hidden py-1">
+                <Logo variant="default" className="brightness-150 h-12 w-48" />
               </Link>
             ) : (
               <Link href="/admin" className="mx-auto">
