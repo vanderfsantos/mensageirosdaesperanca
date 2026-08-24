@@ -14,7 +14,7 @@ export default function WhatsAppFloatingButton() {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center group">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center group">
       {/* Label deslizante no hover */}
       <span className="mr-3 bg-white text-slate-800 font-medium text-sm py-1.5 px-3 rounded-full shadow-lg border border-slate-100 opacity-0 transform translate-x-4 transition-all duration-300 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap">
         Fale Conosco!

@@ -47,29 +47,29 @@ export default async function Home() {
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-primary-light text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="h-3.5 w-3.5 text-secondary animate-pulse" /> Desde 1998 Transformando Vidas
               </span>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-6xl font-black tracking-tight leading-tight">
                 Educação, oportunidades e cuidado para transformar vidas.
               </h1>
-              <p className="text-lg sm:text-xl text-primary-light max-w-2xl font-light leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-primary-light max-w-2xl font-light leading-relaxed">
                 Atuamos no acolhimento e desenvolvimento de mulheres, jovens, pessoas 50+ e famílias em situação de vulnerabilidade, viabilizando novos caminhos através da inclusão produtiva e do suporte emocional.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center lg:justify-start pt-4">
                 <Link
                   href="/agenda"
-                  className="inline-flex items-center justify-center rounded-xl bg-secondary px-8 py-4 text-base font-bold text-white shadow-lg shadow-secondary/20 hover:bg-secondary-hover hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-secondary px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-secondary/20 hover:bg-secondary-hover hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
                 >
                   QUERO PARTICIPAR
                 </Link>
                 <Link
                   href="/faca-parte"
-                  className="inline-flex items-center justify-center rounded-xl border-2 border-white bg-white/5 backdrop-blur-sm px-8 py-4 text-base font-bold text-white hover:bg-white hover:text-slate-900 hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border-2 border-white bg-white/5 backdrop-blur-sm px-6 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-white hover:bg-white hover:text-slate-900 hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none"
                 >
                   QUERO APOIAR
                 </Link>
                 <Link
                   href="/impacto"
-                  className="inline-flex items-center justify-center gap-1.5 px-6 py-4 text-base font-bold text-primary-light hover:text-white transition-colors"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 px-4 sm:px-6 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-primary-light hover:text-white transition-colors"
                 >
                   CONHEÇA NOSSO IMPACTO <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -142,7 +142,7 @@ export default async function Home() {
             <div className="h-1 w-16 bg-secondary mx-auto rounded-full" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             <ImpactCounter targetValue={1111} label="Alunos Certificados" />
             <ImpactCounter targetValue={12550} label="Atendimentos Prestados" />
             <ImpactCounter targetValue={132} label="Turmas Realizadas" />

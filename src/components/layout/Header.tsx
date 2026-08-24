@@ -273,7 +273,7 @@ export default function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               type="button"
-              className="inline-flex items-center justify-center rounded-xl p-2.5 text-brand-teal hover:bg-brand-teal-light focus:outline-none focus:ring-2 focus:ring-brand-teal cursor-pointer"
+              className="inline-flex items-center justify-center rounded-xl min-h-[44px] min-w-[44px] p-2.5 text-brand-teal hover:bg-brand-teal-light focus:outline-none focus:ring-2 focus:ring-brand-teal cursor-pointer"
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
             >

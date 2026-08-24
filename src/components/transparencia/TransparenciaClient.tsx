@@ -164,16 +164,16 @@ export default function TransparenciaClient({ initialDocs }: TransparenciaClient
                   className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between gap-4 hover:shadow-md transition-shadow"
                 >
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-primary bg-primary-light px-2.5 py-1 rounded-full">
+                    <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                      <span className="text-xs font-bold text-primary bg-primary-light px-2.5 py-1 rounded-full whitespace-nowrap">
                         Ano {doc.year}
                       </span>
                       {isAvailable ? (
-                        <span className="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 flex items-center gap-1 whitespace-nowrap">
                           <FileCheck2 className="h-3 w-3" /> Disponível
                         </span>
                       ) : (
-                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 flex items-center gap-1 whitespace-nowrap">
                           <Sparkles className="h-3 w-3" /> Em Atualização
                         </span>
                       )}
@@ -190,8 +190,8 @@ export default function TransparenciaClient({ initialDocs }: TransparenciaClient
                     )}
                   </div>
 
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs text-slate-400 font-medium">
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                    <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
                       {doc.fileType?.toUpperCase() || 'PDF'} {doc.fileSize ? `• ${doc.fileSize}` : ''}
                     </span>
 
@@ -200,12 +200,12 @@ export default function TransparenciaClient({ initialDocs }: TransparenciaClient
                         href={previewUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange hover:text-brand-orange-dark transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-orange hover:text-brand-orange-dark transition-colors whitespace-nowrap"
                       >
                         Visualizar Documento <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     ) : (
-                      <span className="text-xs font-bold text-slate-400">
+                      <span className="text-xs font-bold text-slate-400 whitespace-nowrap">
                         Aguardando publicação
                       </span>
                     )}
