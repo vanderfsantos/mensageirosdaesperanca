@@ -84,7 +84,8 @@ export default function CadastroAdminPage() {
         options: {
           data: {
             full_name: fullName,
-            role: role,
+            cargo: role || 'Administrador',
+            role: 'editor',
           },
         },
       });

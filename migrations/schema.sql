@@ -133,23 +133,38 @@ CREATE POLICY "Admins podem inserir ou deletar perfis"
 
 -- Trigger para criar perfil automaticamente ao cadastrar em auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger AS $$
+RETURNS trigger 
+LANGUAGE plpgsql 
+SECURITY DEFINER SET search_path = public
+AS $$
+DECLARE
+    user_role text;
 BEGIN
+    user_role := lower(coalesce(new.raw_user_meta_data->>'role', 'editor'));
+    IF user_role NOT IN ('admin', 'editor', 'comunicacao') THEN
+        user_role := 'editor';
+    END IF;
+
     INSERT INTO public.profiles (id, full_name, email, role, status)
     VALUES (
         new.id,
         coalesce(new.raw_user_meta_data->>'full_name', 'Administrador'),
         new.email,
-        coalesce(new.raw_user_meta_data->>'role', 'editor'),
+        user_role,
         'ativo'
     )
     ON CONFLICT (id) DO UPDATE
     SET full_name = EXCLUDED.full_name,
         email = EXCLUDED.email,
         role = EXCLUDED.role;
+        
     RETURN new;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE WARNING 'handle_new_user warning: %', SQLERRM;
+        RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
