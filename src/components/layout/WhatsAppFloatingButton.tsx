@@ -1,8 +1,14 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function WhatsAppFloatingButton() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
   const phoneNumber = '5511959907614';
   const message = encodeURIComponent('Olá! Gostaria de saber mais sobre o trabalho da OSC Mensageiros da Esperança e como posso ajudar.');
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

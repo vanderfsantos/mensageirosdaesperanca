@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Users } from 'lucide-react';
+import { Menu, X, Heart, Users } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 
 export default function Header() {
@@ -20,6 +20,11 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // O Header NÃO deve ser renderizado dentro do painel administrativo
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   const navLinks = [
     { label: 'Início', href: '/' },
     { label: 'Quem Somos', href: '/quem-somos' },
@@ -27,7 +32,6 @@ export default function Header() {
     { label: 'Agenda & Cursos', href: '/agenda' },
     { label: 'Transparência', href: '/transparencia' },
     { label: 'Notícias', href: '/noticias' },
-    { label: 'Faça Parte', href: '/faca-parte' },
     { label: 'Contato', href: '/contato' },
   ];
 
@@ -40,14 +44,14 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo Oficial da OSC Mensageiros da Esperança */}
-          <Link href="/" className="flex items-center focus:outline-none" title="Página Inicial">
+        <div className="flex h-20 items-center justify-between gap-4">
+          {/* Logo Oficial */}
+          <Link href="/" className="flex items-center shrink-0 focus:outline-none" title="Página Inicial">
             <Logo variant="default" priority />
           </Link>
 
-          {/* Navegação Desktop */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+          {/* Navegação Desktop Espaçosa */}
+          <nav className="hidden xl:flex items-center gap-6">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -56,7 +60,7 @@ export default function Header() {
                   href={link.href}
                   className={`text-sm font-semibold transition-colors focus:outline-none ${
                     isActive
-                      ? 'text-brand-teal font-bold'
+                      ? 'text-brand-teal font-extrabold'
                       : 'text-slate-600 hover:text-brand-teal'
                   }`}
                 >
@@ -66,19 +70,48 @@ export default function Header() {
             })}
           </nav>
 
+          {/* Navegação Tablet/Notebook (LG) */}
+          <nav className="hidden lg:flex xl:hidden items-center gap-4">
+            {navLinks.slice(0, 5).map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-xs font-semibold transition-colors focus:outline-none ${
+                    isActive
+                      ? 'text-brand-teal font-bold'
+                      : 'text-slate-600 hover:text-brand-teal'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            <Link
+              href="/noticias"
+              className={`text-xs font-semibold transition-colors focus:outline-none ${
+                pathname === '/noticias' ? 'text-brand-teal font-bold' : 'text-slate-600 hover:text-brand-teal'
+              }`}
+            >
+              Mais
+            </Link>
+          </nav>
+
           {/* Ações Desktop */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3 shrink-0">
             <Link
               href="/faca-parte"
-              className="flex items-center gap-1.5 text-xs font-bold text-brand-teal hover:text-brand-teal-dark px-3 py-2 rounded-xl transition-colors focus:outline-none bg-brand-teal-light/60 hover:bg-brand-teal-light"
+              className="flex items-center gap-1.5 text-xs font-bold text-brand-teal hover:text-brand-teal-dark px-3.5 py-2 rounded-xl transition-colors focus:outline-none bg-brand-teal-light hover:bg-brand-teal-light/80 border border-brand-teal/20"
             >
               <Users className="h-4 w-4" />
-              Quero Participar
+              <span>Quero Participar</span>
             </Link>
             <Link
               href="/faca-parte#doacoes"
-              className="relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-brand-orange hover:bg-brand-orange-dark px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-md shadow-brand-orange/20 transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2"
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-orange hover:bg-brand-orange-dark px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-md shadow-brand-orange/25 transition-all hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2"
             >
+              <Heart className="h-3.5 w-3.5 fill-white" />
               DOE AGORA
             </Link>
           </div>
@@ -88,7 +121,7 @@ export default function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               type="button"
-              className="inline-flex items-center justify-center rounded-xl p-2.5 text-brand-teal hover:bg-brand-teal-light focus:outline-none focus:ring-2 focus:ring-brand-teal"
+              className="inline-flex items-center justify-center rounded-xl p-2.5 text-brand-teal hover:bg-brand-teal-light focus:outline-none focus:ring-2 focus:ring-brand-teal cursor-pointer"
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -106,7 +139,7 @@ export default function Header() {
       {/* Menu Mobile */}
       <div
         className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'max-h-[520px] border-t border-slate-200 bg-white' : 'max-h-0'
+          isMobileMenuOpen ? 'max-h-[560px] border-t border-slate-200 bg-white' : 'max-h-0'
         }`}
         id="mobile-menu"
       >
@@ -140,8 +173,9 @@ export default function Header() {
             <Link
               href="/faca-parte#doacoes"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-brand-orange hover:bg-brand-orange-dark px-4 py-3 text-sm font-black uppercase tracking-wider text-white shadow-md shadow-brand-orange/20 transition-all text-center"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-orange hover:bg-brand-orange-dark px-4 py-3 text-sm font-black uppercase tracking-wider text-white shadow-md shadow-brand-orange/20 transition-all text-center"
             >
+              <Heart className="h-4 w-4 fill-white" />
               DOE AGORA
             </Link>
           </div>

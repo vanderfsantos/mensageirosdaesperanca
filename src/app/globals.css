@@ -1,33 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FAFAFA;
+  --background: #F8FAFC;
   --foreground: #1E293B;
-  --primary: #007F7A;
-  --primary-hover: #006662;
-  --primary-light: #E6F3F2;
-  --secondary: #E65A28;
-  --secondary-hover: #CF4E20;
-  --secondary-light: #FDF1ED;
-  --neutral-border: #E2E8F0;
+  --primary: #1B857D;
+  --primary-hover: #13635D;
+  --primary-light: #E8F4F3;
+  --secondary: #E85D36;
+  --secondary-hover: #D04A23;
+  --secondary-light: #FDF2EE;
+  --neutral-border: #E2E6E9;
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Cores Corporativas */
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-primary-light: var(--primary-light);
+  /* Tokens Brand Principais */
+  --color-brand-teal: #1B857D;
+  --color-brand-teal-dark: #13635D;
+  --color-brand-teal-light: #E8F4F3;
 
-  --color-secondary: var(--secondary);
-  --color-secondary-hover: var(--secondary-hover);
-  --color-secondary-light: var(--secondary-light);
+  --color-brand-orange: #E85D36;
+  --color-brand-orange-dark: #D04A23;
+  --color-brand-orange-light: #FDF2EE;
 
-  --color-neutral-bg: var(--background);
-  --color-neutral-text: var(--foreground);
-  --color-neutral-border: var(--neutral-border);
+  --color-brand-gold: #E6A834;
+  --color-brand-purple: #5B4A82;
+  --color-brand-olive: #6E8E56;
+
+  --color-brand-gray-surface: #E2E6E9;
+  --color-brand-gray-light: #F8FAFC;
+
+  /* Aliases Primary e Secondary */
+  --color-primary: #1B857D;
+  --color-primary-hover: #13635D;
+  --color-primary-light: #E8F4F3;
+
+  --color-secondary: #E85D36;
+  --color-secondary-hover: #D04A23;
+  --color-secondary-light: #FDF2EE;
+
+  --color-neutral-bg: #F8FAFC;
+  --color-neutral-text: #1E293B;
+  --color-neutral-border: #E2E6E9;
 
   /* Tipografia */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;

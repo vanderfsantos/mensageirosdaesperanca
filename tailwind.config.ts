@@ -9,6 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        'brand-teal': '#1B857D',
+        'brand-teal-dark': '#13635D',
+        'brand-teal-light': '#E8F4F3',
+        'brand-orange': '#E85D36',
+        'brand-orange-dark': '#D04A23',
+        'brand-orange-light': '#FDF2EE',
+        'brand-gold': '#E6A834',
+        'brand-purple': '#5B4A82',
+        'brand-olive': '#6E8E56',
+        'brand-gray-surface': '#E2E6E9',
+        'brand-gray-light': '#F8FAFC',
         brand: {
           teal: {
             DEFAULT: '#1B857D',
