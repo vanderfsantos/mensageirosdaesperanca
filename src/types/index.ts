@@ -47,7 +47,8 @@ export interface TransparencyDoc {
   id: string;
   title: string;
   year: number;
-  category: 'relatorio' | 'edital' | 'ata' | 'financeiro';
+  category: 'institucional' | 'governanca' | 'atividades' | 'contas' | 'mrosc' | 'politicas';
+  status: 'disponivel' | 'atualizacao';
   fileUrl: string;
   fileSize: string;
   fileType: string;

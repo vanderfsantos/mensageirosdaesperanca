@@ -5,7 +5,7 @@ export const courseEvents: CourseEvent[] = [
     id: '1',
     slug: 'informatica-basica',
     title: 'Informática Básica e Inclusão Digital',
-    description: 'Curso focado em capacitar jovens e adultos da comunidade no uso de computadores, internet, ferramentas de escritório (Word, Excel) e introdução à navegação segura, abrindo portas para o mercado de trabalho.',
+    description: 'Curso focado em capacitar jovens e adults da comunidade no uso de computadores, internet, ferramentas de escritório (Word, Excel) e introdução à navegação segura, abrindo portas para o mercado de trabalho.',
     date: '15 Mar 2026',
     time: '14:00 - 17:00',
     location: 'Praça da Cidadania Osasco - Sala de TI',
@@ -209,43 +209,135 @@ export const impactStories: ImpactStory[] = [
 export const transparencyDocs: TransparencyDoc[] = [
   {
     id: '1',
-    title: 'Relatório Anual de Atividades e Impacto Social 2025',
-    year: 2025,
-    category: 'relatorio',
-    fileUrl: '/docs/relatorio-impacto-2025.pdf',
-    fileSize: '3.4 MB',
+    title: 'Estatuto Social Consolidado da OSC',
+    year: 2026,
+    category: 'institucional',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1EstatutoSocialOSC2026/view?usp=sharing',
+    fileSize: '1.2 MB',
     fileType: 'PDF',
     publishDate: '10 Jan 2026'
   },
   {
     id: '2',
-    title: 'Demonstrativo Financeiro Consolidado Exercício 2025',
-    year: 2025,
-    category: 'financeiro',
-    fileUrl: '/docs/balanco-financeiro-2025.pdf',
-    fileSize: '1.8 MB',
+    title: 'Inscrição e Cadastro Ativo CNPJ',
+    year: 2026,
+    category: 'institucional',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1CNPJAtivoOSCMensageiros/view?usp=sharing',
+    fileSize: '450 KB',
     fileType: 'PDF',
-    publishDate: '20 Jan 2026'
+    publishDate: '11 Jan 2026'
   },
   {
     id: '3',
-    title: 'Edital 01/2026 - Seleção Pública de Projetos e Oficinas Sociais',
+    title: 'Ata da Assembleia Geral Eleição Diretoria',
     year: 2026,
-    category: 'edital',
-    fileUrl: '/docs/edital-oficinas-2026.pdf',
-    fileSize: '950 KB',
+    category: 'governanca',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1AtaAssembleiaOSC2026/view?usp=sharing',
+    fileSize: '2.3 MB',
     fileType: 'PDF',
-    publishDate: '05 Fev 2026'
+    publishDate: '25 Fev 2026'
   },
   {
     id: '4',
-    title: 'Ata de Eleição da Diretoria Executiva e Conselho Fiscal',
-    year: 2026,
-    category: 'ata',
-    fileUrl: '/docs/ata-eleicao-diretoria-2026.pdf',
-    fileSize: '1.2 MB',
+    title: 'Regimento Interno e Normas de Conduta',
+    year: 2025,
+    category: 'governanca',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1RegimentoInternoOSC/view?usp=sharing',
+    fileSize: '1.4 MB',
     fileType: 'PDF',
-    publishDate: '12 Fev 2026'
+    publishDate: '12 Ago 2025'
+  },
+  {
+    id: '5',
+    title: 'Relatório Anual de Atividades Sociais 2025',
+    year: 2025,
+    category: 'atividades',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1RelatorioAtividades2025/view?usp=sharing',
+    fileSize: '3.4 MB',
+    fileType: 'PDF',
+    publishDate: '15 Fev 2026'
+  },
+  {
+    id: '6',
+    title: 'Relatório Social de Impacto Comunitário 2024',
+    year: 2024,
+    category: 'atividades',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1RelatorioImpacto2024/view?usp=sharing',
+    fileSize: '2.8 MB',
+    fileType: 'PDF',
+    publishDate: '20 Jan 2025'
+  },
+  {
+    id: '7',
+    title: 'Balanço Patrimonial e DRE Consolidada 2025',
+    year: 2025,
+    category: 'contas',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1BalancoPatrimonialDRE2025/view?usp=sharing',
+    fileSize: '1.8 MB',
+    fileType: 'PDF',
+    publishDate: '01 Mar 2026'
+  },
+  {
+    id: '8',
+    title: 'Auditoria Contábil e Demonstrações Financeiras 2024',
+    year: 2024,
+    category: 'contas',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1AuditoriaFinanceira2024/view?usp=sharing',
+    fileSize: '2.1 MB',
+    fileType: 'PDF',
+    publishDate: '12 Fev 2025'
+  },
+  {
+    id: '9',
+    title: 'Termo de Colaboração MROSC e Plano de Trabalho - Osasco',
+    year: 2026,
+    category: 'mrosc',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1TermoMROSCOsasco2026/view?usp=sharing',
+    fileSize: '3.1 MB',
+    fileType: 'PDF',
+    publishDate: '02 Jan 2026'
+  },
+  {
+    id: '10',
+    title: 'Relatório de Execução de Parceria Pública MROSC - Lapa',
+    year: 2025,
+    category: 'mrosc',
+    status: 'atualizacao',
+    fileUrl: 'https://drive.google.com/file/d/1RelatorioParceriaLapa2025/view?usp=sharing',
+    fileSize: '0 KB',
+    fileType: 'PDF',
+    publishDate: 'Pendente'
+  },
+  {
+    id: '11',
+    title: 'Política de Proteção à Criança e Adolescente',
+    year: 2026,
+    category: 'politicas',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1PoliticaProtecaoMenores/view?usp=sharing',
+    fileSize: '920 KB',
+    fileType: 'PDF',
+    publishDate: '03 Jan 2026'
+  },
+  {
+    id: '12',
+    title: 'Código de Ética e Integridade Institucional',
+    year: 2025,
+    category: 'politicas',
+    status: 'disponivel',
+    fileUrl: 'https://drive.google.com/file/d/1CodigoEticaOSCMensageiros/view?usp=sharing',
+    fileSize: '1.1 MB',
+    fileType: 'PDF',
+    publishDate: '15 Mar 2025'
   }
 ];
 
