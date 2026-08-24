@@ -506,22 +506,6 @@ export const adminProfiles: AdminProfile[] = [
     status: 'ativo',
     createdAt: '12 Jan 2026',
   },
-  {
-    id: 'usr-3',
-    fullName: 'Marcos Oliveira',
-    email: 'marcos@mensageirosdaesperanca.org',
-    role: 'editor',
-    status: 'ativo',
-    createdAt: '15 Fev 2026',
-  },
-  {
-    id: 'usr-4',
-    fullName: 'Juliana Costa',
-    email: 'comunicacao@mensageirosdaesperanca.org',
-    role: 'comunicacao',
-    status: 'convidado',
-    createdAt: '20 Fev 2026',
-  },
 ];
 
 
