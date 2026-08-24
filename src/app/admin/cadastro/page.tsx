@@ -17,6 +17,7 @@ import {
   EyeOff,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import Logo from '@/components/ui/Logo';
 
 const CARGOS = [
   'Coordenadora Geral',
@@ -109,9 +110,12 @@ export default function CadastroAdminPage() {
       <div className="w-full max-w-md space-y-7 bg-white p-8 rounded-3xl border border-slate-200/80 shadow-md">
 
         {/* Identidade Visual */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-1 bg-primary/10 text-primary px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5 text-secondary animate-pulse" /> Novo Administrador
+        <div className="flex flex-col items-center text-center space-y-3">
+          <Link href="/" className="inline-block focus:outline-none" title="Voltar ao site">
+            <Logo variant="default" priority />
+          </Link>
+          <div className="inline-flex items-center gap-1 bg-brand-teal-light text-brand-teal px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="h-3.5 w-3.5 text-brand-orange animate-pulse" /> Novo Administrador
           </div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">
             Criar Conta
@@ -120,6 +124,7 @@ export default function CadastroAdminPage() {
             Preencha os dados para solicitar acesso ao painel da OSC.
           </p>
         </div>
+
 
         {/* Mensagem de Erro */}
         {errorMessage && (

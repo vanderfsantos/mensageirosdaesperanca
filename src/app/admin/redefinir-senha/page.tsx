@@ -12,6 +12,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import Logo from '@/components/ui/Logo';
+import Link from 'next/link';
 
 export default function RedefinirSenhaPage() {
   const router = useRouter();
@@ -91,9 +93,12 @@ export default function RedefinirSenhaPage() {
       <div className="w-full max-w-md space-y-7 bg-white p-8 rounded-3xl border border-slate-200/80 shadow-md">
 
         {/* Identidade Visual */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary/10 mx-auto">
-            <ShieldCheck className="h-7 w-7 text-primary" />
+        <div className="flex flex-col items-center text-center space-y-3">
+          <Link href="/" className="inline-block focus:outline-none" title="Voltar ao site">
+            <Logo variant="default" priority />
+          </Link>
+          <div className="inline-flex items-center gap-1.5 bg-brand-teal-light text-brand-teal px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+            <ShieldCheck className="h-3.5 w-3.5 text-brand-teal" /> Segurança & Acesso
           </div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">
             Nova Senha
@@ -102,6 +107,7 @@ export default function RedefinirSenhaPage() {
             Escolha uma nova senha segura para sua conta administrativa.
           </p>
         </div>
+
 
         {/* Mensagem de Erro */}
         {errorMessage && (

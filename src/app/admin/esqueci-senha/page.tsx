@@ -11,6 +11,7 @@ import {
   KeyRound,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import Logo from '@/components/ui/Logo';
 
 export default function EsqueciSenhaPage() {
   const [email, setEmail] = useState('');
@@ -64,17 +65,21 @@ export default function EsqueciSenhaPage() {
       <div className="w-full max-w-md space-y-7 bg-white p-8 rounded-3xl border border-slate-200/80 shadow-md">
 
         {/* Identidade Visual */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary/10 mx-auto">
-            <KeyRound className="h-7 w-7 text-primary" />
+        <div className="flex flex-col items-center text-center space-y-3">
+          <Link href="/" className="inline-block focus:outline-none" title="Voltar ao site">
+            <Logo variant="default" priority />
+          </Link>
+          <div className="inline-flex items-center gap-1.5 bg-brand-teal-light text-brand-teal px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+            <KeyRound className="h-3.5 w-3.5 text-brand-orange" /> Recuperação de Acesso
           </div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">
-            Recuperar Acesso
+            Esqueci Minha Senha
           </h1>
           <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-xs mx-auto">
             Informe o e-mail cadastrado e enviaremos um link seguro para você redefinir sua senha.
           </p>
         </div>
+
 
         {/* Mensagem de Erro */}
         {errorMessage && (

@@ -9,20 +9,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          teal: {
+            DEFAULT: '#1B857D',
+            dark: '#13635D',
+            light: '#E8F4F3',
+          },
+          orange: {
+            DEFAULT: '#E85D36',
+            dark: '#D04A23',
+            light: '#FDF2EE',
+          },
+          gold: '#E6A834',
+          purple: '#5B4A82',
+          olive: '#6E8E56',
+          gray: {
+            surface: '#E2E6E9',
+            light: '#F8FAFC',
+          }
+        },
         primary: {
-          DEFAULT: "#007F7A",
-          hover: "#006662",
-          light: "#E6F3F2",
+          DEFAULT: '#1B857D',
+          hover: '#13635D',
+          light: '#E8F4F3',
         },
         secondary: {
-          DEFAULT: "#E65A28",
-          hover: "#CF4E20",
-          light: "#FDF1ED",
+          DEFAULT: '#E85D36',
+          hover: '#D04A23',
+          light: '#FDF2EE',
         },
         neutral: {
-          bg: "#FAFAFA",
+          bg: "#F8FAFC",
           text: "#1E293B",
-          border: "#E2E8F0",
+          border: "#E2E6E9",
         },
       },
       fontFamily: {

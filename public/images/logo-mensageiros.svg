@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 100" fill="none">
+  <!-- Símbolo da Árvore da Vida / Esperança -->
+  <g transform="translate(10, 8)">
+    <!-- Fundo circular suave -->
+    <circle cx="42" cy="42" r="40" fill="#E8F4F3" />
+    
+    <!-- Tronco e Galhos em Teal Escuro -->
+    <path d="M42 66 C42 52 42 42 42 34 M42 48 C36 42 30 38 24 38 M42 44 C48 38 54 36 60 36 M42 36 C38 30 32 26 28 26 M42 34 C46 28 52 24 56 24" stroke="#13635D" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M34 66 C38 64 46 64 50 66" stroke="#13635D" stroke-width="4.5" stroke-linecap="round" />
+
+    <!-- Folhagem Vibrante Multicolorida -->
+    <!-- Brand Teal (#1B857D) -->
+    <circle cx="42" cy="18" r="8.5" fill="#1B857D" />
+    <circle cx="28" cy="24" r="7.5" fill="#1B857D" />
+    <!-- Brand Orange (#E85D36) -->
+    <circle cx="56" cy="22" r="8" fill="#E85D36" />
+    <circle cx="22" cy="36" r="7.5" fill="#E85D36" />
+    <!-- Brand Gold (#E6A834) -->
+    <circle cx="62" cy="35" r="7.5" fill="#E6A834" />
+    <circle cx="36" cy="28" r="6" fill="#E6A834" />
+    <!-- Brand Olive (#6E8E56) -->
+    <circle cx="48" cy="32" r="6.5" fill="#6E8E56" />
+    <circle cx="16" cy="48" r="5.5" fill="#6E8E56" />
+    <!-- Brand Purple (#5B4A82) -->
+    <circle cx="67" cy="48" r="5.5" fill="#5B4A82" />
+    <circle cx="42" cy="40" r="5" fill="#5B4A82" />
+  </g>
+
+  <!-- Tipografia Institucional -->
+  <g transform="translate(108, 22)">
+    <!-- MENSAGEIROS DA -->
+    <text x="0" y="24" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="21" letter-spacing="1.5" fill="#1B857D">
+      MENSAGEIROS
+    </text>
+    <text x="168" y="24" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="14" letter-spacing="2" fill="#E85D36">
+      DA
+    </text>
+    
+    <!-- ESPERANÇA -->
+    <text x="0" y="46" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="23" letter-spacing="2.5" fill="#13635D">
+      ESPERANÇA
+    </text>
+
+    <!-- Subtítulo Oficial -->
+    <text x="1" y="62" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="7.5" letter-spacing="1.2" fill="#64748B">
+      TRANSFORMAÇÃO SOCIAL • DESDE 1998
+    </text>
+  </g>
+</svg>

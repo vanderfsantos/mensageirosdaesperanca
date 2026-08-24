@@ -20,6 +20,7 @@ import {
   KeyRound
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import Logo from '@/components/ui/Logo';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -102,20 +103,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         <div className="flex flex-col">
           {/* Header da Sidebar */}
-          <div className="flex h-20 items-center justify-between px-6 border-b border-slate-800 shrink-0">
+          <div className="flex h-20 items-center justify-between px-5 border-b border-slate-800 shrink-0">
             {isSidebarOpen ? (
-              <Link href="/admin" className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
-                  M
-                </span>
-                <span className="font-extrabold text-sm tracking-wider text-white uppercase">
-                  Mensageiros
-                </span>
+              <Link href="/admin" className="flex items-center gap-2 overflow-hidden">
+                <Logo variant="default" className="brightness-125 h-10 w-44" />
               </Link>
             ) : (
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white mx-auto">
-                M
-              </span>
+              <Link href="/admin" className="mx-auto">
+                <Logo variant="icon-only" />
+              </Link>
             )}
 
             {isSidebarOpen && (
@@ -128,6 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </button>
             )}
           </div>
+
 
           {/* Itens do Menu */}
           <nav className="p-4 space-y-1.5 flex-1 overflow-y-auto">
