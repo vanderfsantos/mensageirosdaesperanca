@@ -244,6 +244,8 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
       id: item.id,
       name: item.name,
       role: item.role,
+      mandate: item.mandate || undefined,
+      displayOrder: item.display_order ?? 99,
       imageUrl: item.image_url,
       bio: item.bio || undefined,
       linkedinUrl: item.linkedin_url || undefined,

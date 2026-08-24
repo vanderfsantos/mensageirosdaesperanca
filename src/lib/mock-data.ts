@@ -1,4 +1,4 @@
-import { CourseEvent, NewsPost, ImpactStory, TransparencyDoc, Partner, TeamMember } from '../types';
+import { CourseEvent, NewsPost, ImpactStory, TransparencyDoc, Partner, TeamMember, ContactMessage } from '../types';
 
 export const courseEvents: CourseEvent[] = [
   {
@@ -391,6 +391,8 @@ export const teamMembers: TeamMember[] = [
     id: '1',
     name: 'Ana Paula Silveira',
     role: 'Diretora Executiva',
+    mandate: '2024-2026',
+    displayOrder: 1,
     imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop',
     bio: 'Profissional com mais de 15 anos de atuação no Terceiro Setor, pós-graduada em Gestão de Políticas Públicas e Desenvolvimento Social.',
     linkedinUrl: 'https://linkedin.com/in/ana-paula-silveira',
@@ -400,6 +402,8 @@ export const teamMembers: TeamMember[] = [
     id: '2',
     name: 'Marcos Oliveira',
     role: 'Coordenador Geral de Projetos',
+    mandate: '2024-2026',
+    displayOrder: 2,
     imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop',
     bio: 'Educador físico e ativista comunitário, responsável por gerenciar o cronograma de oficinas esportivas, culturais e profissionalizantes.',
     linkedinUrl: 'https://linkedin.com/in/marcos-oliveira',
@@ -409,6 +413,8 @@ export const teamMembers: TeamMember[] = [
     id: '3',
     name: 'Juliana Costa Martins',
     role: 'Assistente Social Corporativa',
+    mandate: '2024-2026',
+    displayOrder: 3,
     imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
     bio: 'Bacharel em Serviço Social, cuida do cadastramento, triagem e acolhimento das famílias de alta vulnerabilidade beneficiadas pelos nossos programas.',
     email: 'juliana.social@mensageirosdaesperanca.org'
@@ -417,9 +423,58 @@ export const teamMembers: TeamMember[] = [
     id: '4',
     name: 'Ricardo Mendes Santana',
     role: 'Coordenador de Voluntários',
+    mandate: '2024-2026',
+    displayOrder: 4,
     imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop',
     bio: 'Especialista em engajamento corporativo e comunitário, gerencia a recepção, capacitação e alocação de novos voluntários nos eventos da OSC.',
     linkedinUrl: 'https://linkedin.com/in/ricardo-mendes-santana',
     email: 'ricardo@mensageirosdaesperanca.org'
   }
 ];
+
+export const contactMessages: ContactMessage[] = [
+  {
+    id: 'msg-1',
+    name: 'Fernanda Rocha',
+    email: 'fernanda.rocha@email.com',
+    phone: '(11) 99876-5432',
+    subject: 'Cursos',
+    message: 'Olá! Gostaria de saber se há vagas disponíveis para o curso de Panificação em março. Tenho interesse em participar e moro próximo à Sede Lapa.',
+    status: 'pendente',
+    isAnonymous: false,
+    receivedAt: '24 Ago 2026 — 09:14',
+  },
+  {
+    id: 'msg-2',
+    name: 'Anônimo',
+    email: 'canal-escuta@sistema.interno',
+    subject: 'Canal de Escuta',
+    message: 'Gostaria de relatar uma situação de desconforto que presenciei durante uma das atividades. Prefiro não me identificar por ora, mas gostaria que fosse investigado com discrição.',
+    status: 'pendente',
+    isAnonymous: true,
+    receivedAt: '23 Ago 2026 — 16:42',
+  },
+  {
+    id: 'msg-3',
+    name: 'Paulo Henrique Abreu',
+    email: 'paulo.abreu@empresa.com.br',
+    phone: '(11) 3344-5566',
+    subject: 'Orçamento Buffet Social',
+    message: 'Prezados, somos uma empresa de médio porte e gostaríamos de solicitar um orçamento para o serviço de buffet social do Doce Mensageiro para o nosso evento corporativo de confraternização em dezembro com aproximadamente 120 pessoas.',
+    status: 'respondido',
+    isAnonymous: false,
+    receivedAt: '22 Ago 2026 — 11:05',
+    resolvedAt: '22 Ago 2026 — 15:30',
+  },
+  {
+    id: 'msg-4',
+    name: 'Carla Menezes',
+    email: 'carla@ongparceira.org',
+    subject: 'Parcerias e Projetos',
+    message: 'Somos uma OSC que atua na área de saúde mental e acreditamos que há uma excelente oportunidade de parceria complementar com a Mensageiros da Esperança. Gostaríamos de agendar uma reunião.',
+    status: 'pendente',
+    isAnonymous: false,
+    receivedAt: '21 Ago 2026 — 08:53',
+  },
+];
+

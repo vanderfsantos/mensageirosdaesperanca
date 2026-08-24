@@ -25,11 +25,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [adminEmail, setAdminEmail] = useState<string>('admin@mensageiros.org');
 
-  const isLoginPage = pathname === '/admin/login';
+  const isAuthPage = [
+    '/admin/login',
+    '/admin/cadastro',
+    '/admin/esqueci-senha',
+    '/admin/redefinir-senha',
+  ].includes(pathname);
 
   // Carrega a sessão do usuário administrador (Supabase ou Cookie Mock)
   useEffect(() => {
-    if (isLoginPage) return;
+    if (isAuthPage) return;
 
     const loadSession = async () => {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -49,7 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     };
 
     loadSession();
-  }, [pathname, isLoginPage]);
+  }, [pathname, isAuthPage]);
 
   const handleLogout = async () => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -69,8 +74,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.refresh();
   };
 
-  // Se for a página de login, não exibe sidebar nem topbar
-  if (isLoginPage) {
+  // Se for página de autenticação, não exibe sidebar nem topbar
+  if (isAuthPage) {
     return <>{children}</>;
   }
 

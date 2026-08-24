@@ -73,8 +73,23 @@ export interface TeamMember {
   id: string;
   name: string;
   role: string;
+  mandate?: string;
+  displayOrder: number;
   imageUrl: string;
   bio?: string;
   linkedinUrl?: string;
   email?: string;
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'pendente' | 'respondido' | 'arquivado';
+  isAnonymous?: boolean;
+  receivedAt: string;
+  resolvedAt?: string;
 }

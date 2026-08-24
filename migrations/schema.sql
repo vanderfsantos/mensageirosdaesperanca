@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS courses_events (
     modality TEXT NOT NULL CHECK (modality IN ('presencial', 'online')),
     shift TEXT NOT NULL CHECK (shift IN ('manha', 'tarde', 'noite', 'sabado')),
     syllabus TEXT[] NOT NULL,
+    registration_link TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,6 +36,8 @@ CREATE TABLE IF NOT EXISTS news_posts (
     date TEXT NOT NULL,
     author TEXT NOT NULL,
     read_time TEXT,
+    featured BOOLEAN DEFAULT FALSE,
+    published_status TEXT NOT NULL DEFAULT 'publicado' CHECK (published_status IN ('publicado', 'rascunho')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -44,10 +47,12 @@ CREATE TABLE IF NOT EXISTS impact_stories (
     name TEXT NOT NULL,
     age INTEGER,
     role TEXT NOT NULL CHECK (role IN ('participante', 'empreendedor', 'voluntario', 'parceiro')),
-    story TEXT NOT NULL,
-    quote TEXT NOT NULL,
-    image_url TEXT NOT NULL,
     project TEXT NOT NULL,
+    quote TEXT NOT NULL,
+    story TEXT NOT NULL,
+    image_url TEXT NOT NULL,
+    video_url TEXT,
+    lgpd_consent BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -59,8 +64,8 @@ CREATE TABLE IF NOT EXISTS transparency_documents (
     category TEXT NOT NULL CHECK (category IN ('institucional', 'governanca', 'atividades', 'contas', 'mrosc', 'politicas')),
     status TEXT NOT NULL CHECK (status IN ('disponivel', 'atualizacao')),
     file_url TEXT NOT NULL,
-    file_size TEXT NOT NULL,
-    file_type TEXT NOT NULL,
+    file_size TEXT NOT NULL DEFAULT '—',
+    file_type TEXT NOT NULL DEFAULT 'PDF',
     publish_date TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -70,9 +75,26 @@ CREATE TABLE IF NOT EXISTS team_members (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     role TEXT NOT NULL,
+    mandate TEXT,
+    display_order INTEGER NOT NULL DEFAULT 0,
     image_url TEXT NOT NULL,
     bio TEXT,
     linkedin_url TEXT,
     email TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 6. Tabela de Mensagens de Contato / Canal de Escuta
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    subject TEXT NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pendente' CHECK (status IN ('pendente', 'respondido', 'arquivado')),
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    received_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
