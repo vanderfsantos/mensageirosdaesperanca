@@ -3,13 +3,17 @@ import { Heart, Eye, Award, Shield, Users } from 'lucide-react';
 import Timeline from '@/components/ui/Timeline';
 import UnidadeCard from '@/components/ui/UnidadeCard';
 import OdsCard from '@/components/ui/OdsCard';
+import { getTeamMembers } from '@/lib/supabaseClient';
 
 export const metadata = {
   title: 'Quem Somos | Mensageiros da Esperança',
   description: 'Conheça a história, governança, unidades de atendimento e os Objetivos de Desenvolvimento Sustentável da OSC Mensageiros da Esperança.',
 };
 
-export default function QuemSomos() {
+export default async function QuemSomos() {
+  const teamData = await getTeamMembers();
+  const team = [...teamData].sort((a, b) => (a.displayOrder ?? 99) - (b.displayOrder ?? 99));
+
   const units = [
     {
       name: 'Sede Lapa',
@@ -100,39 +104,6 @@ export default function QuemSomos() {
       number: 18,
       title: 'Igualdade Racial (Meta Brasil)',
       description: 'Promoção da equidade étnico-racial em todas as nossas instâncias de contratação, acolhimento e seleção de alunos, defendendo os direitos de negros e indígenas.',
-    },
-  ];
-
-  const team = [
-    {
-      name: 'Lorraine Machado',
-      role: 'Presidente e Diretora Executiva',
-      bio: 'Especialista em Gestão Social do Terceiro Setor com 18 anos de ativismo em projetos de inclusão produtiva para mulheres na América Latina. Lidera a expansão estratégica e a governança ética da organização.',
-      term: 'Gestão 2024-2026',
-    },
-    {
-      name: 'Ana Paula Silveira',
-      role: 'Vice-Presidente e Relações Institucionais',
-      bio: 'Pós-graduada em Políticas Públicas, atua no desenvolvimento de convênios, editais públicos e gestão de parcerias estratégicas corporativas.',
-      term: 'Gestão 2024-2026',
-    },
-    {
-      name: 'Marcos Oliveira',
-      role: 'Coordenador Geral de Projetos',
-      bio: 'Educador físico e ativista comunitário, responsável por gerenciar o cronograma de oficinas esportivas, culturais e profissionalizantes.',
-      term: 'Gestão 2024-2026',
-    },
-    {
-      name: 'Juliana Costa Martins',
-      role: 'Assistente Social Corporativa',
-      bio: 'Bacharel em Serviço Social, cuida do cadastramento, triagem e acolhimento das famílias de alta vulnerabilidade beneficiadas pelos nossos programas.',
-      term: 'Gestão 2024-2026',
-    },
-    {
-      name: 'Ricardo Mendes Santana',
-      role: 'Coordenador de Voluntários',
-      bio: 'Especialista em engajamento corporativo e comunitário, gerencia a recepção, capacitação e alocação de novos voluntários nos eventos da OSC.',
-      term: 'Gestão 2024-2026',
     },
   ];
 
@@ -267,18 +238,29 @@ export default function QuemSomos() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {team.map((member) => (
               <div 
-                key={member.name}
+                key={member.id || member.name}
                 className="group bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden"
               >
                 {/* Badge de Mandato */}
                 <div className="absolute top-4 right-4 bg-brand-teal-light text-brand-teal text-[10px] font-bold px-2.5 py-1 rounded-full border border-brand-teal/20">
-                  {member.term}
+                  {member.mandate || 'Gestão 2024-2026'}
                 </div>
 
                 <div className="space-y-4">
                   {/* Foto de Perfil */}
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-teal-light text-brand-teal group-hover:bg-brand-teal group-hover:text-white transition-colors duration-300">
-                    <Users className="h-7 w-7" />
+                  <div className="flex h-16 w-16 overflow-hidden rounded-2xl bg-brand-teal-light text-brand-teal group-hover:bg-brand-teal group-hover:text-white transition-colors duration-300">
+                    {member.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img 
+                        src={member.imageUrl} 
+                        alt={member.name}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Users className="h-7 w-7" />
+                      </div>
+                    )}
                   </div>
                   
                   <div className="space-y-1">
