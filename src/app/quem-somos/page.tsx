@@ -220,7 +220,7 @@ export default async function QuemSomos() {
       </section>
 
       {/* Governança e Equipe */}
-      <section id="equipe" className="py-24 bg-neutral-bg border-t border-b border-slate-200/50">
+      <section id="equipe" className="py-24 bg-neutral-bg border-t border-b border-slate-200/50 scroll-mt-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span className="text-sm font-extrabold text-secondary uppercase tracking-widest">
@@ -272,7 +272,7 @@ export default async function QuemSomos() {
       </section>
 
       {/* Nossas Unidades */}
-      <section className="py-24 bg-white">
+      <section id="unidades" className="py-24 bg-white scroll-mt-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <span className="text-sm font-extrabold text-primary uppercase tracking-widest">
