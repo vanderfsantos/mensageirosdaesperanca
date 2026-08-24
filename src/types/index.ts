@@ -93,3 +93,13 @@ export interface ContactMessage {
   receivedAt: string;
   resolvedAt?: string;
 }
+
+export interface AdminProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  role: 'admin' | 'editor' | 'comunicacao';
+  status: 'ativo' | 'convidado' | 'inativo';
+  createdAt: string;
+}
+

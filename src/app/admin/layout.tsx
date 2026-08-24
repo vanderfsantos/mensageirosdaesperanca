@@ -15,7 +15,9 @@ import {
   Menu,
   ChevronLeft,
   Sparkles,
-  Heart
+  Heart,
+  UserCheck,
+  KeyRound
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -87,6 +89,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Transparência', path: '/admin/transparencia', icon: Layers },
     { label: 'Equipe e Governança', path: '/admin/equipe', icon: Users },
     { label: 'Mensagens de Contato', path: '/admin/mensagens', icon: Mail },
+    { label: 'Usuários e Acessos', path: '/admin/usuarios', icon: UserCheck },
   ];
 
   return (
@@ -184,7 +187,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             {/* Atalho Site Público */}
             <Link
               href="/"
@@ -199,14 +202,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Divisor */}
             <div className="h-6 w-px bg-slate-200 hidden sm:block" />
 
+            {/* Alterar Senha */}
+            <Link
+              href="/admin/redefinir-senha"
+              className="hidden md:flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-primary transition-colors bg-slate-50 hover:bg-primary/5 px-3 py-1.5 rounded-lg border border-slate-200"
+              title="Redefinir senha da conta"
+            >
+              <KeyRound className="h-3.5 w-3.5 text-slate-400" />
+              Alterar Minha Senha
+            </Link>
+
             {/* Perfil Admin */}
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-sm shrink-0">
-                A
+              <div className="h-8 w-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-sm shrink-0 border border-primary/20">
+                {adminEmail.charAt(0).toUpperCase()}
               </div>
-              <span className="text-xs sm:text-sm font-bold text-slate-700 truncate max-w-40 hidden sm:inline">
-                {adminEmail}
-              </span>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-xs sm:text-sm font-bold text-slate-700 truncate max-w-40">
+                  {adminEmail}
+                </span>
+                <Link
+                  href="/admin/redefinir-senha"
+                  className="text-[10px] text-primary hover:underline font-semibold md:hidden"
+                >
+                  Alterar senha
+                </Link>
+              </div>
             </div>
           </div>
         </header>
@@ -219,3 +240,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+

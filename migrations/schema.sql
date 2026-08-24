@@ -98,3 +98,61 @@ CREATE TABLE IF NOT EXISTS contact_messages (
     resolved_at TIMESTAMP WITH TIME ZONE
 );
 
+-- 7. Tabela de Perfis de Usuários Administradores
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+    full_name TEXT,
+    email TEXT,
+    role TEXT DEFAULT 'editor' CHECK (role IN ('admin', 'editor', 'comunicacao')),
+    status TEXT DEFAULT 'ativo' CHECK (status IN ('ativo', 'convidado', 'inativo')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Habilitar Row Level Security (RLS)
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de RLS para perfis
+CREATE POLICY "Usuários autenticados podem visualizar perfis"
+    ON public.profiles FOR SELECT
+    TO authenticated
+    USING (true);
+
+CREATE POLICY "Usuários autenticados podem atualizar seus próprios perfis ou admins gerenciarem"
+    ON public.profiles FOR UPDATE
+    TO authenticated
+    USING (auth.uid() = id OR EXISTS (
+        SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'
+    ));
+
+CREATE POLICY "Admins podem inserir ou deletar perfis"
+    ON public.profiles FOR INSERT
+    TO authenticated
+    WITH CHECK (auth.uid() = id OR EXISTS (
+        SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'
+    ));
+
+-- Trigger para criar perfil automaticamente ao cadastrar em auth.users
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+    INSERT INTO public.profiles (id, full_name, email, role, status)
+    VALUES (
+        new.id,
+        coalesce(new.raw_user_meta_data->>'full_name', 'Administrador'),
+        new.email,
+        coalesce(new.raw_user_meta_data->>'role', 'editor'),
+        'ativo'
+    )
+    ON CONFLICT (id) DO UPDATE
+    SET full_name = EXCLUDED.full_name,
+        email = EXCLUDED.email,
+        role = EXCLUDED.role;
+    RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+

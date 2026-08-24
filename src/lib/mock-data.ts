@@ -1,4 +1,4 @@
-import { CourseEvent, NewsPost, ImpactStory, TransparencyDoc, Partner, TeamMember, ContactMessage } from '../types';
+import { CourseEvent, NewsPost, ImpactStory, TransparencyDoc, Partner, TeamMember, ContactMessage, AdminProfile } from '../types';
 
 export const courseEvents: CourseEvent[] = [
   {
@@ -477,4 +477,40 @@ export const contactMessages: ContactMessage[] = [
     receivedAt: '21 Ago 2026 — 08:53',
   },
 ];
+
+export const adminProfiles: AdminProfile[] = [
+  {
+    id: 'usr-1',
+    fullName: 'Administrador Geral',
+    email: 'admin@mensageiros.org',
+    role: 'admin',
+    status: 'ativo',
+    createdAt: '10 Jan 2026',
+  },
+  {
+    id: 'usr-2',
+    fullName: 'Ana Paula Silveira',
+    email: 'anapaula@mensageirosdaesperanca.org',
+    role: 'admin',
+    status: 'ativo',
+    createdAt: '12 Jan 2026',
+  },
+  {
+    id: 'usr-3',
+    fullName: 'Marcos Oliveira',
+    email: 'marcos@mensageirosdaesperanca.org',
+    role: 'editor',
+    status: 'ativo',
+    createdAt: '15 Fev 2026',
+  },
+  {
+    id: 'usr-4',
+    fullName: 'Juliana Costa',
+    email: 'comunicacao@mensageirosdaesperanca.org',
+    role: 'comunicacao',
+    status: 'convidado',
+    createdAt: '20 Fev 2026',
+  },
+];
+
 
