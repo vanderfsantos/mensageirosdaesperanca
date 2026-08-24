@@ -156,3 +156,86 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
+-- ==========================================================
+-- 8. HABILITAÇÃO DE RLS NAS DEMAIS TABELAS PÚBLICAS
+-- ==========================================================
+
+ALTER TABLE courses_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE news_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE impact_stories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transparency_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- 1. Cursos e Eventos
+CREATE POLICY "Leitura pública de cursos e eventos"
+    ON courses_events FOR SELECT
+    USING (true);
+
+CREATE POLICY "Admins gerenciam cursos e eventos"
+    ON courses_events FOR ALL
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+-- 2. Notícias
+CREATE POLICY "Leitura pública de notícias"
+    ON news_posts FOR SELECT
+    USING (true);
+
+CREATE POLICY "Admins gerenciam notícias"
+    ON news_posts FOR ALL
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+-- 3. Histórias de Impacto
+CREATE POLICY "Leitura pública de histórias"
+    ON impact_stories FOR SELECT
+    USING (true);
+
+CREATE POLICY "Admins gerenciam histórias"
+    ON impact_stories FOR ALL
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+-- 4. Documentos de Transparência
+CREATE POLICY "Leitura pública de documentos"
+    ON transparency_documents FOR SELECT
+    USING (true);
+
+CREATE POLICY "Admins gerenciam documentos"
+    ON transparency_documents FOR ALL
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+-- 5. Equipe e Governança
+CREATE POLICY "Leitura pública da equipe"
+    ON team_members FOR SELECT
+    USING (true);
+
+CREATE POLICY "Admins gerenciam equipe"
+    ON team_members FOR ALL
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+-- 6. Mensagens de Contato e Canal de Escuta
+CREATE POLICY "Qualquer visitante pode enviar mensagem de contato"
+    ON contact_messages FOR INSERT
+    WITH CHECK (true);
+
+CREATE POLICY "Admins podem visualizar e responder mensagens"
+    ON contact_messages FOR SELECT
+    TO authenticated
+    USING (true);
+
+CREATE POLICY "Admins podem atualizar status das mensagens"
+    ON contact_messages FOR UPDATE
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+
