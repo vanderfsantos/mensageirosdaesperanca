@@ -1,13 +1,14 @@
 import React from 'react';
+import Image from 'next/image';
 import { 
   TrendingUp, 
   Brain, 
   Lightbulb, 
   Wrench, 
-  GraduationCap, 
   Heart, 
   ShieldAlert, 
-  Compass
+  Compass,
+  ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -42,22 +43,25 @@ export default function OQueFazemos() {
 
   const capacitacoes = [
     {
-      title: 'Jovens & Tecnologia',
-      target: 'Jovens de 15 a 24 anos',
-      description: 'Oficinas focadas em alfabetização tecnológica completa, lógica de programação básica, letramento digital para mercado administrativo e suporte no desenvolvimento de currículos e preparação para processos seletivos do primeiro emprego.',
-      details: ['Informática para Escritório', 'Introdução à Lógica e Web', 'Orientação Vocacional'],
+      title: 'Educação e Inclusão Produtiva',
+      target: 'Jovens e Adultos em Transição de Carreira',
+      imageUrl: '/images/content/oficina-gastronomia-pratica.jpg',
+      description: 'Cursos livres de culinária profissional, panificação, introdução à lógica digital e informática para escritórios, capacitando para rápida colocação profissional.',
+      details: ['Panificação e Gastronomia Prática', 'Informática e Inclusão Digital', 'Orientação para o Mercado'],
     },
     {
-      title: 'Mulheres & Emancipação',
-      target: 'Mulheres e mães solo',
-      description: 'Qualificação profissional e empoderamento por meio da Cozinha Industrial e Confeitaria Comunitária. Além do ensino culinário, promovemos rodas de apoio sobre liderança feminina, direitos básicos e suporte à saúde mental.',
-      details: ['Panificação e Confeitaria', 'Gastronomia para Eventos', 'Relações Humanas e Autocuidado'],
+      title: 'Empreendedorismo e Mulheres',
+      target: 'Mulheres e Mães Solo',
+      imageUrl: '/images/content/oficina-artesanato.jpg',
+      description: 'Oficinas de artesanato, economia criativa e confeitaria com foco em emancipação feminina, gestão de pequenos negócios e redes de apoio comunitário.',
+      details: ['Artesanato e Costura Criativa', 'Precificação e Vendas', 'Autocuidado e Emancipação'],
     },
     {
-      title: 'Empreendedores Locais',
-      target: 'Microempreendedores e produtores comunitários',
-      description: 'Mentoria básica focada em desenvolver competências de gestão financeira familiar/comercial, estratégias de divulgação de produtos através de redes sociais locais, precificação correta de mercadorias e planejamento de vendas.',
-      details: ['Finanças Descomplicadas', 'Divulgação Digital Básica', 'Modelagem de Negócios Sociais'],
+      title: 'Saúde, Cultura e Esporte',
+      target: 'Crianças, Jovens e 50+',
+      imageUrl: '/images/content/jogos-osasco.jpg',
+      description: 'Atividades esportivas coletivas, jogos integrativos, oficinas de expressão artística e rodas comunitárias para promoção da saúde preventiva e qualidade de vida.',
+      details: ['Jogos Integrativos e Esportes', 'Rodas de Convivência Ativa', 'Apoio Psicossocial Contínuo'],
     },
   ];
 
@@ -93,16 +97,26 @@ export default function OQueFazemos() {
                   Nossa matriz de ensino e atuação fundamenta-se nos princípios da <strong>Lei de Diretrizes e Bases da Educação Nacional (LDB)</strong>, compreendendo que a educação se vincula estreitamente ao mundo do trabalho e às práticas sociais.
                 </p>
                 <p>
-                  Defendemos a tese pedagógica do <strong>trabalho como princípio educativo</strong>: o fazer técnico e manual não é um fim em si mesmo, mas um organizador cognitivo e social. Através das oficinas de panificação, TI e audiovisual, nossos alunos não apenas aprendem uma profissão, mas debatem sobre cooperação, ética cidadã, inovação comunitária e dignidade social, tornando-se agentes ativos da própria vida.
+                  Defendemos a tese pedagógica do <strong>trabalho como princípio educativo</strong>: o fazer técnico e manual não é um fim em si mesmo, mas um organizador cognitivo e social. Através das oficinas de panificação, TI e audiovisual, nossos alunos não apenas aprendem uma profissão, mas debatem sobre cooperação, ética cidadã, inovação comunitária e dignidade social.
                 </p>
               </div>
             </div>
 
-            {/* Destaque Visual Metodológico */}
-            <div className="lg:col-span-5 bg-neutral-bg p-8 rounded-3xl border border-slate-200/80 shadow-inner flex flex-col justify-center items-center text-center">
-              <GraduationCap className="h-16 w-16 text-primary mb-4" />
-              <h3 className="text-lg font-extrabold text-slate-800">Cidadania Integral</h3>
-              <p className="text-sm text-slate-500 mt-2">Nossas oficinas são elaboradas sob a ótica de que o conhecimento liberta, reconstrói identidades e garante a autonomia humana.</p>
+            {/* Destaque Visual Metodológico Real */}
+            <div className="lg:col-span-5 relative">
+              <div className="absolute inset-0 bg-primary-light rounded-3xl -rotate-2 scale-98 pointer-events-none" />
+              <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 shadow-md h-80 group">
+                <Image
+                  src="/images/content/oficina-gastronomia-pratica.jpg"
+                  alt="Oficina prática de capacitação profissional na Cozinha-Escola"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent p-4 text-white">
+                  <p className="text-xs font-semibold">Aprendizagem prática e inclusão produtiva</p>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -151,7 +165,7 @@ export default function OQueFazemos() {
         </div>
       </section>
 
-      {/* Detalhamento das áreas de capacitação pedagógica */}
+      {/* Detalhamento dos Eixos de Capacitação com Fotos Reais */}
       <section className="py-24 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -159,7 +173,7 @@ export default function OQueFazemos() {
               Público-Alvo e Cursos
             </span>
             <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Áreas de Capacitação e Oficinas
+              Eixos de Capacitação e Oficinas
             </h2>
             <div className="h-1.5 w-16 bg-primary mx-auto rounded-full" />
             <p className="text-slate-600">
@@ -171,32 +185,50 @@ export default function OQueFazemos() {
             {capacitacoes.map((cap) => (
               <div 
                 key={cap.title}
-                className="bg-neutral-bg p-8 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between"
+                className="group bg-neutral-bg rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="space-y-4">
-                  <span className="text-xs font-bold text-secondary uppercase bg-secondary-light px-2.5 py-1 rounded">
-                    {cap.target}
-                  </span>
-                  <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">
-                    {cap.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
-                    {cap.description}
-                  </p>
+                <div>
+                  {/* Foto Real do Eixo */}
+                  <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                    <Image
+                      src={cap.imageUrl}
+                      alt={cap.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute top-4 left-4">
+                      <span className="text-xs font-bold text-secondary uppercase bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded shadow-sm">
+                        {cap.target}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-8 space-y-4">
+                    <h3 className="text-xl font-extrabold text-slate-800 tracking-tight group-hover:text-primary transition-colors">
+                      {cap.title}
+                    </h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">
+                      {cap.description}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-200/60">
-                  <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">
-                    Principais Componentes:
-                  </h4>
-                  <ul className="space-y-2">
-                    {cap.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm text-slate-700 font-medium">
-                        <span className="h-1.5 w-1.5 bg-primary rounded-full shrink-0" />
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="p-6 sm:p-8 pt-0">
+                  <div className="pt-6 border-t border-slate-200/60">
+                    <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">
+                      Principais Componentes:
+                    </h4>
+                    <ul className="space-y-2">
+                      {cap.details.map((detail, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                          <span className="h-1.5 w-1.5 bg-primary rounded-full shrink-0" />
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             ))}
@@ -264,7 +296,7 @@ export default function OQueFazemos() {
               </p>
               <div className="pt-2">
                 <Link
-                  href="/#doe"
+                  href="/faca-parte"
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-4 text-base font-bold text-white shadow-md shadow-secondary/15 hover:bg-secondary-hover hover:scale-102 transition-all focus:outline-none"
                 >
                   FAÇA UMA DOAÇÃO AGORA

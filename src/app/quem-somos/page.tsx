@@ -21,6 +21,7 @@ export default async function QuemSomos() {
       services: ['Cursos de Panificação e Confeitaria', 'Acolhimento Familiar', 'Distribuição de Cestas Básicas'],
       mapUrl: 'https://maps.google.com/?q=Rua+da+Solidariedade,+450+Lapa+Sao+Paulo',
       description: 'Nosso centro administrativo e pioneiro, onde iniciamos as primeiras oficinas de panificação social.',
+      imageUrl: '/images/content/sede-lapa-fachada.jpg',
     },
     {
       name: 'Praça da Cidadania Osasco',
@@ -28,6 +29,7 @@ export default async function QuemSomos() {
       services: ['Oficinas de TI e Inclusão Digital', 'Programação Básica', 'Atendimento Psicossocial'],
       mapUrl: 'https://maps.google.com/?q=Av.+dos+Autonomistas,+1500+Osasco',
       description: 'Polo voltado à tecnologia e inovação, qualificando jovens e adultos para o mercado de trabalho digital.',
+      imageUrl: '/images/content/jogos-osasco.jpg',
     },
     {
       name: 'Casinha Azul Vila Yolanda',
@@ -35,6 +37,7 @@ export default async function QuemSomos() {
       services: ['Apoio Escolar e Letramento', 'Oficinas Lúdicas e de Leitura', 'Brinquedoteca Comunitária'],
       mapUrl: 'https://maps.google.com/?q=Rua+da+Solidariedade,+450+Lapa+Sao+Paulo',
       description: 'Espaço acolhedor no contraturno escolar focado no desenvolvimento integral de crianças de 6 a 12 anos.',
+      imageUrl: '/images/content/casinha-azul.jpg',
     },
     {
       name: 'Núcleo Zen Raiz',
@@ -42,6 +45,7 @@ export default async function QuemSomos() {
       services: ['Terapias Integrativas', 'Horta Comunitária e Fitoterapia', 'Apoio Psicológico Coletivo'],
       mapUrl: 'https://maps.google.com/?q=Estrada+dos+Romeiros+Km+42+Santana+de+Parnaiba',
       description: 'Espaço ecológico voltado ao bem-estar integral, reconexão com a terra e cuidado com a saúde mental.',
+      imageUrl: '/images/content/oficina-artesanato.jpg',
     },
     {
       name: 'Mensageiros Cast',
@@ -49,6 +53,7 @@ export default async function QuemSomos() {
       services: ['Gravação de Podcasts', 'Produção Audiovisual', 'Oficinas de Produção de Mídia'],
       mapUrl: 'https://maps.google.com/?q=Rua+Lapa,+12+Lapa+Sao+Paulo',
       description: 'Negócio social e estúdio profissional para locação, ensinando jovens sobre rádio, som e edição de vídeo.',
+      imageUrl: '/images/content/mensageiros-cast-estudio.jpg',
     },
     {
       name: 'Cozinha-Escola Doce Mensageiro',
@@ -56,6 +61,7 @@ export default async function QuemSomos() {
       services: ['Cursos de Panificação Comercial', 'Confeitaria e Doceria', 'Produção do Buffet Social'],
       mapUrl: 'https://maps.google.com/?q=Rua+da+Lapa,+452+Lapa+Sao+Paulo',
       description: 'Cozinha industrial equipada, responsável pela produção de itens do Buffet Social e formação profissionalizante.',
+      imageUrl: '/images/content/cozinha-escola-turma.jpg',
     },
   ];
 
@@ -296,6 +302,7 @@ export default async function QuemSomos() {
                 services={unit.services}
                 mapUrl={unit.mapUrl}
                 description={unit.description}
+                imageUrl={unit.imageUrl}
               />
             ))}
           </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 
 interface NegocioSocialCardProps {
@@ -22,16 +23,15 @@ export default function NegocioSocialCard({
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       {/* Imagem do Negócio Social com Zoom no Hover */}
-      <div className="relative h-56 overflow-hidden bg-slate-100">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+      <div className="relative h-56 w-full overflow-hidden bg-slate-100">
+        <Image
           src={imageUrl}
           alt={title}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
         <div className="absolute bottom-4 left-4 right-4">
           <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-secondary text-xs font-bold text-white shadow-sm uppercase tracking-wider">
             {tagline}

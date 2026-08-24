@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   BookOpen, 
   TrendingUp, 
@@ -94,13 +95,20 @@ export default async function Home() {
       <section id="quem-somos" className="py-24 bg-white border-b border-slate-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Foto Ilustrativa ou Bloco de Destaque */}
+            {/* Foto Ilustrativa Real com Legenda */}
             <div className="lg:col-span-5 relative">
-              <div className="absolute inset-0 bg-primary-light rounded-3xl -rotate-3 scale-98 pointer-events-none" />
-              <div className="relative bg-neutral-bg p-10 rounded-3xl border border-slate-200/80 shadow-md flex flex-col justify-center items-center text-center h-80">
-                <Users className="h-16 w-16 text-primary mb-4" />
-                <h3 className="text-xl font-extrabold text-slate-800">Inclusão e Cidadania</h3>
-                <p className="text-sm text-slate-500 mt-2">Promovendo dignidade e autonomia social há mais de duas décadas em São Paulo.</p>
+              <div className="absolute inset-0 bg-primary-light rounded-3xl -rotate-2 scale-98 pointer-events-none" />
+              <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 shadow-md h-80 group">
+                <Image
+                  src="/images/content/sede-lapa-fachada.jpg"
+                  alt="Comunidade e equipe na Sede Lapa"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent p-4 text-white">
+                  <p className="text-xs font-semibold">Comunidade e equipe na Sede Lapa</p>
+                </div>
               </div>
             </div>
 
@@ -384,14 +392,14 @@ export default async function Home() {
               title="Buffet Social Doce Mensageiro"
               tagline="Gastronomia Social"
               description="Contrate serviços de buffet e confeitaria profissional para casamentos, formaturas ou reuniões corporativas. Nossos alimentos são elaborados por alunos qualificados e chefs instrutores da nossa própria cozinha industrial."
-              imageUrl="https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800&auto=format&fit=crop"
+              imageUrl="/images/content/cozinha-escola-turma.jpg"
               ctaLink="/negocios-sociais"
             />
             <NegocioSocialCard
               title="Mensageiros Cast"
               tagline="Estúdio e Podcasting"
               description="Nosso estúdio profissional de gravação audiovisual está aberto para locação comunitária e corporativa. Equipado com microfones e câmeras de alta fidelidade, além de apoiar a formação técnica em som e vídeo de jovens."
-              imageUrl="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop"
+              imageUrl="/images/content/mensageiros-cast-estudio.jpg"
               ctaLink="/negocios-sociais"
             />
             <NegocioSocialCard

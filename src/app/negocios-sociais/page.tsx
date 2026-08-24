@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { 
   Flame, 
   Wrench, 
@@ -43,7 +44,7 @@ export default function NegociosSociaisPage() {
       tagline: 'Gastronomia Social de Alto Padrão',
       description: 'Oferecemos serviços completos de coffee break, coquetéis, almoços corporativos, aniversários e casamentos. Nossa equipe técnica é composta por chefs qualificados e alunos formados nas oficinas da nossa própria cozinha industrial, assegurando uma experiência gastronômica impecável para o seu evento.',
       impactText: 'Ao contratar o nosso buffet social, 100% do lucro líquido gerado é revertido de forma imediata para subsidiar os cursos profissionalizantes gratuitos de panificação, confeitaria e culinária básica oferecidos à comunidade local.',
-      imageUrl: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800&auto=format&fit=crop',
+      imageUrl: '/images/content/cozinha-escola-turma.jpg',
       benefits: [
         'Cardápios customizados e alta confeitaria',
         'Profissionais qualificados da própria comunidade',
@@ -56,7 +57,7 @@ export default function NegociosSociaisPage() {
       tagline: 'Moda Sustentável e Reciclagem Têxtil',
       description: 'Nosso projeto de economia criativa desenvolve bolsas, necessaires, mochilas e brindes institucionais através do reaproveitamento (upcycling) de resíduos e sobras têxteis cedidas por confecções parceiras. Também gerenciamos um bazar beneficente permanente de roupas e utilidades domésticas.',
       impactText: 'Cada brinde corporativo encomendado ou produto comprado no bazar financia as oficinas de costura criativa e modelagem para mães e mulheres em situação de vulnerabilidade, capacitando-as para a geração de renda própria.',
-      imageUrl: 'https://images.unsplash.com/photo-1524295981977-61874000d15c?q=80&w=800&auto=format&fit=crop',
+      imageUrl: '/images/content/oficina-artesanato.jpg',
       benefits: [
         'Produtos ecológicos exclusivos por upcycling',
         'Produção ética que apoia mulheres e mães solo',
@@ -69,7 +70,7 @@ export default function NegociosSociaisPage() {
       tagline: 'Gravação e Audiovisual Profissional',
       description: 'Disponibilizamos nosso estúdio com tratamento acústico de alto nível e equipamentos de ponta para locação comercial. Ideal para gravação de podcasts, audiobooks, dublagem, gravação de cursos digitais e produções de vídeo de curta duração.',
       impactText: 'O valor da locação financia diretamente a manutenção do estúdio e a contratação de instrutores para os nossos cursos de introdução à produção de mídia e som digital voltados para jovens da comunidade no contraturno escolar.',
-      imageUrl: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop',
+      imageUrl: '/images/content/mensageiros-cast-estudio.jpg',
       benefits: [
         'Microfones e gravadores profissionais (Shure/Rode)',
         'Gravação de vídeo em 4K e iluminação cênica completa',
@@ -82,7 +83,7 @@ export default function NegociosSociaisPage() {
       tagline: 'Impacto Social e Responsabilidade Social Corporativa',
       description: 'Apoiamos empresas a estruturarem programas internos de impacto social, responsabilidade corporativa e diversidade. Oferecemos palestras motivacionais e técnicas ministradas por nossa diretoria técnica, além de estruturar ações de voluntariado corporativo em nossos polos.',
       impactText: 'Esta iniciativa conecta empresas parceiras à nossa capilaridade comunitária, ajudando a cumprir suas diretrizes ESG e fomentando o investimento social privado sustentável de forma estruturada e legal.',
-      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop',
+      imageUrl: '/images/content/reconhecimento-selo-racial.jpg',
       benefits: [
         'Palestras personalizadas sobre inclusão de diversidade',
         'Estruturação de programas de voluntariado corporativo',
@@ -188,14 +189,44 @@ export default function NegociosSociaisPage() {
           {/* Apresentação Detalhada do Negócio Social */}
           <div className="lg:col-span-7 space-y-10">
             {/* Bloco de Destaque Visual */}
-            <div className="relative h-72 sm:h-96 w-full overflow-hidden rounded-3xl bg-slate-200 border border-slate-200/60 shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={businesses[activeTab].imageUrl}
-                alt={businesses[activeTab].title}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            {activeTab === 'buffet' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-80 sm:h-96 w-full">
+                <div className="relative h-48 sm:h-full w-full overflow-hidden rounded-3xl border border-slate-200/60 shadow-sm group bg-slate-100">
+                  <Image
+                    src="/images/content/cozinha-escola-turma.jpg"
+                    alt="Turma da Cozinha-Escola Doce Mensageiro"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 35vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent p-4 text-white">
+                    <p className="text-xs font-bold">Cozinha-Escola Industrial</p>
+                  </div>
+                </div>
+                <div className="relative h-48 sm:h-full w-full overflow-hidden rounded-3xl border border-slate-200/60 shadow-sm group bg-slate-100">
+                  <Image
+                    src="/images/content/oficina-gastronomia-pratica.jpg"
+                    alt="Oficinas de confeitaria e buffet para eventos"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 35vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent p-4 text-white">
+                    <p className="text-xs font-bold">Produção Gastronômica</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="relative h-72 sm:h-96 w-full overflow-hidden rounded-3xl bg-slate-100 border border-slate-200/60 shadow-sm group">
+                <Image
+                  src={businesses[activeTab].imageUrl}
+                  alt={businesses[activeTab].title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            )}
 
             {/* Texto Descritivo */}
             <div className="space-y-4">

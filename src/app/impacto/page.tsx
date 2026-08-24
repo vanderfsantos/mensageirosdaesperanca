@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Award, 
   Users, 
@@ -7,13 +8,15 @@ import {
   Clock, 
   ShieldCheck, 
   LineChart, 
-  ArrowRight
+  ArrowRight,
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
 import { impactStories } from '@/lib/mock-data';
 
 export const metadata = {
   title: 'Nosso Impacto | Mensageiros da Esperança',
-  description: 'Explore o dashboard de indicadores de 2025, nossa metodologia de mensuração social e histórias reais de transformação social.',
+  description: 'Explore o dashboard de indicadores de 2025, nossa metodologia de mensuração social, conquistas e reconhecimentos oficiais e histórias reais de transformação social.',
 };
 
 export default function ImpactoPage() {
@@ -97,8 +100,79 @@ export default function ImpactoPage() {
         </div>
       </section>
 
-      {/* Metodologia de Mensuração Social */}
+      {/* Bloco Conquistas e Reconhecimentos com Foto Real */}
       <section className="py-20 bg-white border-t border-b border-slate-200/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Foto Real do Reconhecimento */}
+            <div className="lg:col-span-5 relative">
+              <div className="absolute inset-0 bg-secondary-light rounded-3xl -rotate-2 scale-98 pointer-events-none" />
+              <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 shadow-md h-80 sm:h-96 group bg-slate-100">
+                <Image
+                  src="/images/content/reconhecimento-selo-racial.jpg"
+                  alt="Cerimônia de entrega do Selo de Igualdade Racial para a OSC Mensageiros da Esperança"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent p-4 text-white">
+                  <p className="text-xs font-semibold">Certificação Oficial de Igualdade Racial</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Conteúdo de Reconhecimentos */}
+            <div className="lg:col-span-7 space-y-6">
+              <span className="text-xs font-black tracking-widest text-secondary uppercase bg-secondary-light px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5" /> Conquistas & Premiações
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                Reconhecimento à Excelência Social
+              </h2>
+              <div className="h-1.5 w-16 bg-secondary rounded-full" />
+              
+              <p className="text-slate-600 leading-relaxed text-base">
+                O rigor metodológico, a lisura administrativa e o compromisso ético da <strong>OSC Mensageiros da Esperança</strong> são atestados por premiações e certificações públicas de grande relevância:
+              </p>
+
+              <div className="space-y-4 pt-2">
+                <div className="bg-neutral-bg p-5 rounded-2xl border border-slate-200/60 flex items-start gap-4">
+                  <div className="h-10 w-10 rounded-xl bg-secondary-light text-secondary flex items-center justify-center shrink-0 mt-0.5">
+                    <Award className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-slate-800 text-base">
+                      Selo de Igualdade Racial (Prefeitura de São Paulo)
+                    </h4>
+                    <p className="text-slate-600 text-sm leading-relaxed mt-1">
+                      Concedido pela Secretaria Municipal de Direitos Humanos e Cidadania em reconhecimento às ações afirmativas, igualdade de oportunidades e acolhimento inclusivo promovidos em todas as nossas oficinas e equipe de trabalho.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-neutral-bg p-5 rounded-2xl border border-slate-200/60 flex items-start gap-4">
+                  <div className="h-10 w-10 rounded-xl bg-primary-light text-primary flex items-center justify-center shrink-0 mt-0.5">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-slate-800 text-base">
+                      Prêmio Parker de Sustentabilidade Comunitária
+                    </h4>
+                    <p className="text-slate-600 text-sm leading-relaxed mt-1">
+                      Condecoração corporativa em reconhecimento ao modelo de Cozinha-Escola e Inclusão Produtiva, destacando o alto índice de empregabilidade e autonomia gerados entre os egressos dos cursos livres.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Metodologia de Mensuração Social */}
+      <section className="py-20 bg-neutral-bg">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
@@ -125,7 +199,7 @@ export default function ImpactoPage() {
             </div>
 
             {/* Passos da Mensuração */}
-            <div className="lg:col-span-7 bg-neutral-bg p-8 rounded-3xl border border-slate-200/80 space-y-6 shadow-inner">
+            <div className="lg:col-span-7 bg-white p-8 rounded-3xl border border-slate-200/80 space-y-6 shadow-sm">
               <h3 className="font-extrabold text-slate-800 text-lg flex items-center gap-2 mb-2">
                 <LineChart className="h-5.5 w-5.5 text-secondary" /> Ciclo de Avaliação de Impacto
               </h3>
@@ -149,7 +223,7 @@ export default function ImpactoPage() {
       </section>
 
       {/* Vitrine de Histórias de Transformação e Chamada */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white border-t border-slate-200/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between mb-16 gap-6 text-center sm:text-left">
             <div className="space-y-3">
@@ -189,12 +263,15 @@ export default function ImpactoPage() {
                 </div>
 
                 <div className="mt-8 flex items-center gap-4 pt-6 border-t border-slate-200/50">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={story.imageUrl}
-                    alt={story.name}
-                    className="h-12 w-12 rounded-full object-cover shadow-inner bg-slate-100 shrink-0"
-                  />
+                  <div className="relative h-12 w-12 rounded-full overflow-hidden shadow-inner bg-slate-100 shrink-0">
+                    <Image
+                      src={story.imageUrl}
+                      alt={story.name}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
+                  </div>
                   <div>
                     <h4 className="font-bold text-slate-900 text-sm">{story.name}</h4>
                     <p className="text-xs text-slate-500 capitalize">
