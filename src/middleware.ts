@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Rotas administrativas públicas — não exigem autenticação
+// Rotas administrativas públicas — não exigem autenticação prévia
 const PUBLIC_ADMIN_ROUTES = [
   '/admin/login',
   '/admin/cadastro',
@@ -16,35 +16,51 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
   const pathname = request.nextUrl.pathname;
   const isAdminRoute = pathname.startsWith('/admin');
   const isPublicAdminRoute = PUBLIC_ADMIN_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // ── Modo de Simulação (Mock Auth) — Supabase não configurado ──────────────
-  if (!supabaseUrl || !supabaseAnonKey) {
-    const mockSession = request.cookies.get('mock-session')?.value;
-
-    // Rota protegida sem sessão mock → redireciona para login
-    if (isAdminRoute && !isPublicAdminRoute && !mockSession) {
-      const redirectUrl = new URL('/admin/login', request.url);
-      return NextResponse.redirect(redirectUrl);
-    }
-
-    // Usuário com sessão mock tenta acessar login → redireciona para dashboard
-    if (pathname === '/admin/login' && mockSession) {
-      const redirectUrl = new URL('/admin', request.url);
-      return NextResponse.redirect(redirectUrl);
-    }
-
+  // Se não for rota /admin, libera imediatamente
+  if (!isAdminRoute) {
     return response;
   }
 
-  // ── Supabase SSR — Validação de Sessão Real ───────────────────────────────
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+  // Verifica se há qualquer cookie de sessão ativo (Supabase sb- ou mock-session)
+  const allCookies = request.cookies.getAll();
+  const hasSupabaseCookie = allCookies.some((c) => c.name.startsWith('sb-') && c.value.length > 0);
+  const mockSession = request.cookies.get('mock-session')?.value;
+  const hasAnyAuthCookie = hasSupabaseCookie || !!mockSession;
+
+  // 1. Otimização Instantânea: Se NÃO há cookies de sessão
+  if (!hasAnyAuthCookie) {
+    // Se está em rota protegida do admin, redireciona para login sem fazer requisições lentas
+    if (!isPublicAdminRoute) {
+      const redirectUrl = new URL('/admin/login', request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+    // Se está em rota pública do admin (login, cadastro), permite direto
+    return response;
+  }
+
+  // 2. Modo Simulação (Mock Auth)
+  if (!supabaseUrl || !supabaseAnonKey) {
+    if (!mockSession && !isPublicAdminRoute) {
+      const redirectUrl = new URL('/admin/login', request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+    if (mockSession && pathname === '/admin/login') {
+      const redirectUrl = new URL('/admin', request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+    return response;
+  }
+
+  // 3. Supabase SSR — Validação com Proteção contra Timeout (Timeout Safe)
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
@@ -61,22 +77,28 @@ export async function middleware(request: NextRequest) {
   });
 
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    // Timeout de 2.5s para evitar que a Vercel Edge mate com 504 GATEWAY_TIMEOUT
+    const getUserPromise = supabase.auth.getUser();
+    const timeoutPromise = new Promise<{ data: { user: null }; error: Error }>((resolve) =>
+      setTimeout(() => resolve({ data: { user: null }, error: new Error('Timeout') }), 2500)
+    );
+
+    const { data: { user } } = await Promise.race([getUserPromise, timeoutPromise]);
 
     // Rota protegida sem usuário autenticado → login
-    if (!user && isAdminRoute && !isPublicAdminRoute) {
+    if (!user && !isPublicAdminRoute) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
 
-    // Usuário autenticado tenta acessar login → dashboard
+    // Usuário autenticado tentando acessar o login → dashboard
     if (user && pathname === '/admin/login') {
       const redirectUrl = new URL('/admin', request.url);
       return NextResponse.redirect(redirectUrl);
     }
   } catch (err) {
-    console.error('Middleware: Erro ao validar sessão no Supabase SSR', err);
-    if (isAdminRoute && !isPublicAdminRoute) {
+    console.warn('Middleware: Validação Supabase falhou ou timeout:', err);
+    if (!isPublicAdminRoute) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
@@ -85,7 +107,6 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
-// Intercepta todas as rotas administrativas
 export const config = {
   matcher: ['/admin/:path*'],
 };
