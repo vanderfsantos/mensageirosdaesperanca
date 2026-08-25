@@ -468,7 +468,7 @@ export default function FacaPartePage() {
               Conecte sua marca a projetos auditados que promovem de forma real os Objetivos de Desenvolvimento Sustentável (ODS) em comunidades vulneráveis da Grande São Paulo. 
             </p>
             <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
-              Nossa organização oferece às empresas mantenedoras o **Selo de Impacto Sistêmico** (cotas de patrocínio a partir de **R$ 15.000 / ano**), com envio de relatórios quadrimestrais detalhados com indicadores sociais quantitativos validados pelo **Instituto Inovação Sustentável** para inserção direta no Balanço Social e ESG corporativo.
+              Nossa organização oferece às empresas mantenedoras o <strong>Selo de Impacto Sistêmico</strong> (cotas de patrocínio a partir de <strong>R$ 15.000 / ano</strong>), com envio de relatórios quadrimestrais detalhados com indicadores sociais quantitativos validados pelo <strong>Instituto Inovação Sustentável</strong> para inserção direta no Balanço Social e ESG corporativo.
             </p>
             
             <div className="pt-2">
@@ -487,7 +487,7 @@ export default function FacaPartePage() {
                 </div>
                 <h3 className="text-xl font-extrabold text-green-950">Contato Recebido!</h3>
                 <p className="text-sm text-green-800 leading-relaxed">
-                  Agradecemos o interesse corporativo. A coordenação de parcerias e relações corporativas do **Instituto Inovação Sustentável** entrará em contato em até **48 horas úteis** com uma proposta de aliança estratégica.
+                  Agradecemos o interesse corporativo. A coordenação de parcerias e relações corporativas do <strong>Instituto Inovação Sustentável</strong> entrará em contato em até <strong>48 horas úteis</strong> com uma proposta de aliança estratégica.
                 </p>
               </div>
             ) : (

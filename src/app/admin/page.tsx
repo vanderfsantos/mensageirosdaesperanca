@@ -45,7 +45,7 @@ export default function AdminDashboardPage() {
             Olá, Administrador(a)
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-light">
-            Bem-vindo(a) ao painel de controle da OSC **Mensageiros da Esperança**. Publique oportunidades, gerencie dados de compliance legal e visualize relatos de impacto comunitário.
+            Bem-vindo(a) ao painel de controle da OSC <strong>Mensageiros da Esperança</strong>. Publique oportunidades, gerencie dados de compliance legal e visualize relatos de impacto comunitário.
           </p>
         </div>
 
