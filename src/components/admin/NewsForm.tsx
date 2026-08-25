@@ -149,12 +149,53 @@ export default function NewsForm({ initialData }: NewsFormProps) {
         </div>
 
         {/* URL da Imagem */}
-        <div>
-          <label className={labelClass}><Image className="inline h-3 w-3 mr-1" />URL da Imagem de Capa *</label>
-          <input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://images.unsplash.com/..." className={inputClass} />
+        <div className="space-y-2">
+          <label className={labelClass}><Image className="inline h-3 w-3 mr-1" />URL da Imagem de Capa (Unsplash ou Foto Interna da OSC) *</label>
+          <input 
+            type="text" 
+            value={imageUrl} 
+            onChange={(e) => setImageUrl(e.target.value)} 
+            placeholder="Ex: /images/content/sede-lapa-fachada.jpg ou https://images.unsplash.com/..." 
+            className={`${inputClass} font-mono text-xs`} 
+          />
+
+          {/* Seletor Rápido de Fotos da OSC */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {[
+              { label: '🏛️ Sede Lapa', url: '/images/content/sede-lapa-fachada.jpg' },
+              { label: '🥖 Panificação', url: '/images/content/cozinha-escola-turma.jpg' },
+              { label: '👩‍🍳 Gastronomia', url: '/images/content/oficina-gastronomia-pratica.jpg' },
+              { label: '🧵 Artesanato', url: '/images/content/oficina-artesanato.jpg' },
+              { label: '⚽ Esportes', url: '/images/content/jogos-osasco.jpg' },
+              { label: '🎙️ Podcast', url: '/images/content/mensageiros-cast-estudio.jpg' },
+              { label: '🏆 Reconhecimento', url: '/images/content/reconhecimento-selo-racial.jpg' },
+            ].map((photo) => (
+              <button
+                key={photo.url}
+                type="button"
+                onClick={() => setImageUrl(photo.url)}
+                className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                  imageUrl === photo.url
+                    ? 'bg-primary text-white border-primary shadow-sm font-bold'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary'
+                }`}
+              >
+                {photo.label}
+              </button>
+            ))}
+          </div>
+
           {imageUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="Preview" className="mt-2 h-32 w-full object-cover rounded-xl border border-slate-200" onError={(e) => (e.currentTarget.style.display = 'none')} />
+            <img 
+              src={imageUrl} 
+              alt="Preview" 
+              className="mt-2 h-32 w-full object-cover rounded-xl border border-slate-200" 
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = 'https://placehold.co/600x400/fee2e2/991b1b?text=Link+Invalido+ou+Incompleto';
+              }} 
+            />
           )}
         </div>
 

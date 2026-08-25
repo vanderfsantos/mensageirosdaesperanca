@@ -235,7 +235,7 @@ export default async function Home() {
                 <div className="relative h-48 overflow-hidden bg-slate-200">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
-                    src={event.imageUrl} 
+                    src={event.imageUrl && event.imageUrl.length > 20 ? event.imageUrl : '/images/content/oficina-artesanato.jpg'} 
                     alt={event.title}
                     loading="lazy"
                     decoding="async"
@@ -318,7 +318,7 @@ export default async function Home() {
                 <div className="relative h-48 overflow-hidden bg-slate-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
-                    src={news.imageUrl} 
+                    src={news.imageUrl && news.imageUrl.length > 20 ? news.imageUrl : '/images/content/sede-lapa-fachada.jpg'} 
                     alt={news.title}
                     loading="lazy"
                     decoding="async"

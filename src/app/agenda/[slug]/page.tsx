@@ -64,7 +64,7 @@ export default async function CourseDetailsPage({ params }: PageProps) {
             <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-3xl bg-slate-200 border border-slate-200/60 shadow-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={event.imageUrl}
+                src={event.imageUrl && event.imageUrl.length > 20 ? event.imageUrl : '/images/content/oficina-artesanato.jpg'}
                 alt={event.title}
                 className="w-full h-full object-cover"
               />

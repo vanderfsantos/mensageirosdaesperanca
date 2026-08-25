@@ -43,7 +43,10 @@ const courseSchema = z.object({
   description: z.string().min(10, 'A descrição deve ter no mínimo 10 caracteres.'),
   syllabusText: z.string().min(5, 'Descreva pelo menos um item do conteúdo programático.'),
   registrationLink: z.string().url('A URL do formulário externo deve ser válida.').optional().or(z.literal('')),
-  imageUrl: z.string().url('A URL da imagem de capa deve ser válida.').min(1, 'A URL da imagem é obrigatória.'),
+  imageUrl: z.string().min(1, 'A URL da imagem é obrigatória.').refine(
+    (val) => val.startsWith('http://') || val.startsWith('https://') || val.startsWith('/'),
+    'A imagem deve ser um link válido (https://...) ou uma foto interna (/images/...)'
+  ),
 });
 
 type CourseFormData = z.infer<typeof courseSchema>;
@@ -51,6 +54,17 @@ type CourseFormData = z.infer<typeof courseSchema>;
 interface CourseFormProps {
   initialData?: CourseEvent | null;
 }
+
+const oscPhotos = [
+  { label: '🧵 Artesanato & Bazar', url: '/images/content/oficina-artesanato.jpg' },
+  { label: '🥖 Panificação & Cozinha', url: '/images/content/cozinha-escola-turma.jpg' },
+  { label: '👩‍🍳 Gastronomia Prática', url: '/images/content/oficina-gastronomia-pratica.jpg' },
+  { label: '⚽ Esportes & Lazer', url: '/images/content/jogos-osasco.jpg' },
+  { label: '🎙️ Mensageiros Cast', url: '/images/content/mensageiros-cast-estudio.jpg' },
+  { label: '🏛️ Sede Lapa', url: '/images/content/sede-lapa-fachada.jpg' },
+  { label: '🏠 Casinha Azul', url: '/images/content/casinha-azul.jpg' },
+  { label: '🛍️ Bazar (Unsplash)', url: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=800&auto=format&fit=crop' },
+];
 
 export default function CourseForm({ initialData }: CourseFormProps) {
   const router = useRouter();
@@ -83,7 +97,7 @@ export default function CourseForm({ initialData }: CourseFormProps) {
     slug: '',
     category: 'capacitacao',
     locationName: 'Sede Lapa',
-    shift: 'tarde',
+    shift: 'manha',
     modality: 'presencial',
     statusText: 'inscricoes-abertas',
     workloadVal: 40,
@@ -91,18 +105,21 @@ export default function CourseForm({ initialData }: CourseFormProps) {
     description: '',
     syllabusText: '',
     registrationLink: '',
-    imageUrl: 'https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/content/cozinha-escola-turma.jpg',
   };
 
   const { 
     register, 
     handleSubmit, 
     setValue, 
+    watch,
     formState: { errors } 
   } = useForm<CourseFormData>({
     resolver: zodResolver(courseSchema),
     defaultValues
   });
+
+  const currentImageUrl = watch('imageUrl');
 
   // Atualiza automaticamente o slug ao digitar o título
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -345,40 +362,89 @@ export default function CourseForm({ initialData }: CourseFormProps) {
         </div>
 
         {/* Bloco 4: Capa & Link Externo */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Imagem de Capa */}
-          <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">
-              URL da Imagem de Capa (Unsplash, etc) *
-            </label>
-            <input
-              type="text"
-              {...register('imageUrl')}
-              placeholder="https://images.unsplash.com/photo-..."
-              className={`w-full rounded-xl border bg-slate-50 px-4 py-3 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all ${
-                errors.imageUrl ? 'border-rose-400 focus:ring-rose-400' : 'border-slate-200'
-              }`}
-            />
-            {errors.imageUrl && (
-              <span className="text-[10px] text-rose-500 font-bold">{errors.imageUrl.message}</span>
-            )}
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Imagem de Capa */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">
+                URL da Imagem de Capa (Unsplash ou Foto Interna da OSC) *
+              </label>
+              <input
+                type="text"
+                {...register('imageUrl')}
+                placeholder="Ex: /images/content/oficina-artesanato.jpg ou https://images.unsplash.com/..."
+                className={`w-full rounded-xl border bg-slate-50 px-4 py-3 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all font-mono text-xs ${
+                  errors.imageUrl ? 'border-rose-400 focus:ring-rose-400' : 'border-slate-200'
+                }`}
+              />
+              {errors.imageUrl && (
+                <span className="text-[10px] text-rose-500 font-bold">{errors.imageUrl.message}</span>
+              )}
+            </div>
+
+            {/* Formulário Externo */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block flex items-center gap-1">
+                <Link2 className="h-3.5 w-3.5" /> URL do Formulário Externo (Google Forms / Opcional)
+              </label>
+              <input
+                type="text"
+                {...register('registrationLink')}
+                placeholder="https://docs.google.com/forms/..."
+                className={`w-full rounded-xl border bg-slate-50 px-4 py-3 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all ${
+                  errors.registrationLink ? 'border-rose-400 focus:ring-rose-400' : 'border-slate-200'
+                }`}
+              />
+              {errors.registrationLink && (
+                <span className="text-[10px] text-rose-500 font-bold">{errors.registrationLink.message}</span>
+              )}
+            </div>
           </div>
 
-          {/* Formulário Externo */}
-          <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-slate-550 uppercase tracking-widest block flex items-center gap-1">
-              <Link2 className="h-3.5 w-3.5" /> URL do Formulário Externo (Google Forms / Opcional)
-            </label>
-            <input
-              type="text"
-              {...register('registrationLink')}
-              placeholder="https://docs.google.com/forms/..."
-              className={`w-full rounded-xl border bg-slate-55 px-4 py-3 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all ${
-                errors.registrationLink ? 'border-rose-400 focus:ring-rose-400' : 'border-slate-200'
-              }`}
-            />
-            {errors.registrationLink && (
-              <span className="text-[10px] text-rose-550 font-bold">{errors.registrationLink.message}</span>
+          {/* Seletor Rápido de Fotos da OSC */}
+          <div className="space-y-2 pt-1 p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              Galeria de Fotos da OSC (Clique para preencher a capa):
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {oscPhotos.map((photo) => (
+                <button
+                  key={photo.url}
+                  type="button"
+                  onClick={() => setValue('imageUrl', photo.url, { shouldValidate: true })}
+                  className={`text-xs px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                    currentImageUrl === photo.url
+                      ? 'bg-primary text-white border-primary shadow-sm font-bold'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary'
+                  }`}
+                >
+                  {photo.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Live Preview da Imagem */}
+            {currentImageUrl && (
+              <div className="mt-3 pt-3 border-t border-slate-200/60 flex flex-col sm:flex-row items-center gap-4">
+                <div className="relative h-24 w-40 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0 shadow-inner">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={currentImageUrl}
+                    alt="Prévia da Capa"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = 'https://placehold.co/600x400/fee2e2/991b1b?text=Link+Invalido+ou+Incompleto';
+                    }}
+                  />
+                </div>
+                <div className="space-y-1 text-xs text-slate-600">
+                  <p className="font-bold text-slate-800">Prévia da Foto de Capa</p>
+                  <p className="text-[11px] text-slate-500">
+                    Se a imagem não aparecer ou mostrar aviso vermelho, o link colado está incompleto. Use os botões acima para selecionar fotos oficiais da OSC.
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </div>

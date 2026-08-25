@@ -204,6 +204,10 @@ export default function AgendaClient({ initialEvents }: AgendaClientProps) {
                     src={event.imageUrl}
                     alt={event.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/images/content/oficina-artesanato.jpg';
+                    }}
                   />
                   <div className="absolute top-4 left-4">
                     {getStatusBadge(event.statusText)}
