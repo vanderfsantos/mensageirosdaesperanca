@@ -36,6 +36,9 @@ export default function LoginPage() {
       } else if (errorParam === 'blocked' || errorParam === 'rejected') {
         setErrorMessage('Acesso negado. Entre em contato com a diretoria.');
         setWarningType('blocked');
+      } else if (errorParam === 'link_expirado') {
+        setErrorMessage('O link de recuperação expirou ou é inválido. Por favor, solicite um novo link de redefinição.');
+        setWarningType('error');
       }
     }
   }, []);
