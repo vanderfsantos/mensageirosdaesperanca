@@ -40,10 +40,10 @@ export default function EsqueciSenhaPage() {
     // Supabase: envia e-mail de recuperação
     try {
       const supabase = createClient();
-      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const redirectUrl = `${window.location.origin}/admin/redefinir-senha`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${origin}/auth/callback?next=/admin/redefinir-senha`,
+        redirectTo: redirectUrl,
       });
 
       if (error) {

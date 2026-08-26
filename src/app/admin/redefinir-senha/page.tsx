@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Lock,
@@ -24,6 +24,40 @@ export default function RedefinirSenhaPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const isSupabaseConfigured =
+      !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!isSupabaseConfigured) return;
+
+    const supabase = createClient();
+
+    // 1. Ouvinte para eventos de recuperação de senha do Supabase
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        console.log('Evento PASSWORD_RECOVERY detectado com sucesso.');
+      }
+    });
+
+    // 2. Se houver ?code= na URL (PKCE direto), processa a troca de sessão
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get('code');
+      if (code) {
+        supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+          if (error) {
+            console.warn('Erro ao processar token de redefinição:', error.message);
+          }
+        });
+      }
+    }
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   // Indicador visual de força de senha
   const getPasswordStrength = (pwd: string) => {
