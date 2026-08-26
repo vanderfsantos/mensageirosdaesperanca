@@ -491,6 +491,15 @@ export const contactMessages: ContactMessage[] = [
 
 export const adminProfiles: AdminProfile[] = [
   {
+    id: 'usr-0',
+    fullName: 'Vander Freitas',
+    email: 'vander@gmail.com',
+    cargo: 'Diretoria / Administrador Geral',
+    role: 'admin',
+    status: 'active',
+    createdAt: '26 Ago 2026',
+  },
+  {
     id: 'usr-1',
     fullName: 'Administrador Geral',
     email: 'admin@mensageiros.org',
