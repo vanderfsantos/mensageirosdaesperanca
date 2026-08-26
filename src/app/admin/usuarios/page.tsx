@@ -5,17 +5,32 @@ import { UserCheck } from 'lucide-react';
 import { AdminProfile } from '@/types';
 
 export const metadata = {
-  title: 'Usuários e Acessos | Admin — Mensageiros da Esperança',
-  description: 'Gerenciamento de administradores e permissões de acesso ao painel.',
+  title: 'Gestão de Usuários & Aprovações | Admin — Mensageiros da Esperança',
+  description: 'Gerenciamento de operadores, análise de solicitações pendentes e permissões de acesso ao painel.',
 };
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminUsuariosPage() {
   let users: AdminProfile[] = [];
+  let currentUserRole: 'admin' | 'editor' | 'comunicacao' = 'admin';
 
   try {
     const supabase = await createClient();
+    
+    // Obtém o usuário logado para checar permissão de admin
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: currentProfile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      if (currentProfile?.role) {
+        currentUserRole = currentProfile.role;
+      }
+    }
+
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -27,8 +42,9 @@ export default async function AdminUsuariosPage() {
         id: item.id,
         fullName: item.full_name || 'Administrador',
         email: item.email || '',
+        cargo: item.cargo || 'Administrador',
         role: item.role || 'editor',
-        status: item.status || 'ativo',
+        status: item.status || 'pending',
         createdAt: item.created_at
           ? new Date(item.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '')
           : 'Recente',
@@ -41,8 +57,8 @@ export default async function AdminUsuariosPage() {
     users = [...adminProfiles];
   }
 
-  const totalAtivos = users.filter((u) => u.status === 'ativo').length;
-  const totalAdmins = users.filter((u) => u.role === 'admin').length;
+  const totalAtivos = users.filter((u) => u.status === 'active' || u.status === 'ativo').length;
+  const totalPendentes = users.filter((u) => u.status === 'pending').length;
 
   return (
     <div className="space-y-6">
@@ -52,16 +68,20 @@ export default async function AdminUsuariosPage() {
         </div>
         <div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">
-            Usuários e Acessos
+            Usuários & Aprovações de Acesso
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            {users.length} {users.length === 1 ? 'administrador cadastrado' : 'administradores cadastrados'} •{' '}
-            <span className="text-emerald-600 font-semibold">{totalAtivos} ativos</span> •{' '}
-            <span className="text-purple-600 font-semibold">{totalAdmins} administradores gerais</span>
+            {users.length} {users.length === 1 ? 'operador registrado' : 'operadores registrados'} •{' '}
+            <span className="text-emerald-600 font-semibold">{totalAtivos} ativos</span>
+            {totalPendentes > 0 && (
+              <>
+                {' '}• <span className="text-amber-600 font-bold">{totalPendentes} pendentes de aprovação</span>
+              </>
+            )}
           </p>
         </div>
       </div>
-      <UsuariosAdmin initialUsers={users} />
+      <UsuariosAdmin initialUsers={users} currentUserRole={currentUserRole} />
     </div>
   );
 }

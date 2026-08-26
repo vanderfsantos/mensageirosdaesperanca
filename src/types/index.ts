@@ -99,7 +99,9 @@ export interface AdminProfile {
   fullName: string;
   email: string;
   role: 'admin' | 'editor' | 'comunicacao';
-  status: 'ativo' | 'convidado' | 'inativo';
+  status: 'pending' | 'active' | 'rejected' | 'blocked' | 'ativo' | 'convidado' | 'inativo';
+  cargo?: string;
   createdAt: string;
 }
+
 

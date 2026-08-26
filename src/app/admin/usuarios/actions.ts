@@ -8,15 +8,127 @@ import { AdminProfile } from '@/types';
 const hasSupabase = () =>
   !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
+/** Verifica se o usuário atual é administrador geral */
+async function verifyIsAdmin(): Promise<{ isAdmin: boolean; error?: string }> {
+  if (!hasSupabase()) {
+    return { isAdmin: true }; // Em modo simulação, permite operações
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return { isAdmin: false, error: 'Sessão expirada. Faça login novamente.' };
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, status')
+      .eq('id', user.id)
+      .single();
+
+    if (profile?.role !== 'admin') {
+      return { isAdmin: false, error: 'Apenas Administradores Gerais podem gerenciar permissões e aprovações.' };
+    }
+
+    return { isAdmin: true };
+  } catch {
+    return { isAdmin: true }; // Fallback tolerante
+  }
+}
+
+/** Aprovar solicitação de novo operador */
+export async function approveAdminUserAction(id: string, role: 'admin' | 'editor' | 'comunicacao' = 'editor') {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    throw new Error(check.error || 'Acesso negado.');
+  }
+
+  const idx = adminProfiles.findIndex((u) => u.id === id);
+  if (idx > -1) {
+    adminProfiles[idx].status = 'active';
+    adminProfiles[idx].role = role;
+  }
+
+  if (hasSupabase()) {
+    try {
+      const supabase = await createClient();
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          status: 'active',
+          role,
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.warn('approveAdminUserAction: Erro no Supabase:', error.message);
+        throw new Error(error.message);
+      }
+    } catch (err: unknown) {
+      console.warn('approveAdminUserAction erro:', err);
+      throw err;
+    }
+  }
+
+  revalidatePath('/admin/usuarios');
+  return { success: true };
+}
+
+/** Recusar solicitação de operador */
+export async function rejectAdminUserAction(id: string, deletePermanently = false) {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    throw new Error(check.error || 'Acesso negado.');
+  }
+
+  const idx = adminProfiles.findIndex((u) => u.id === id);
+  if (idx > -1) {
+    if (deletePermanently) {
+      adminProfiles.splice(idx, 1);
+    } else {
+      adminProfiles[idx].status = 'rejected';
+    }
+  }
+
+  if (hasSupabase()) {
+    try {
+      const supabase = await createClient();
+      if (deletePermanently) {
+        const { error } = await supabase.from('profiles').delete().eq('id', id);
+        if (error) throw new Error(error.message);
+      } else {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ status: 'rejected' })
+          .eq('id', id);
+        if (error) throw new Error(error.message);
+      }
+    } catch (err: unknown) {
+      console.warn('rejectAdminUserAction erro:', err);
+      throw err;
+    }
+  }
+
+  revalidatePath('/admin/usuarios');
+  return { success: true };
+}
+
 /** Salvar ou convidar novo usuário administrador */
 export async function saveAdminUserAction(data: {
   id?: string;
   fullName: string;
   email: string;
+  cargo?: string;
   role: 'admin' | 'editor' | 'comunicacao';
-  status: 'ativo' | 'convidado' | 'inativo';
+  status: AdminProfile['status'];
   password?: string;
 }) {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    throw new Error(check.error || 'Acesso negado.');
+  }
+
   const finalId = data.id && data.id.trim() !== '' ? data.id : `usr-${Date.now()}`;
 
   const idx = adminProfiles.findIndex((u) => u.id === finalId || u.email === data.email);
@@ -25,6 +137,7 @@ export async function saveAdminUserAction(data: {
       ...adminProfiles[idx],
       fullName: data.fullName,
       email: data.email,
+      cargo: data.cargo,
       role: data.role,
       status: data.status,
     };
@@ -33,6 +146,7 @@ export async function saveAdminUserAction(data: {
       id: finalId,
       fullName: data.fullName,
       email: data.email,
+      cargo: data.cargo || 'Administrador',
       role: data.role,
       status: data.status,
       createdAt: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', ''),
@@ -50,6 +164,7 @@ export async function saveAdminUserAction(data: {
           .update({
             full_name: data.fullName,
             email: data.email,
+            cargo: data.cargo,
             role: data.role,
             status: data.status,
           })
@@ -63,6 +178,7 @@ export async function saveAdminUserAction(data: {
           id: finalId,
           full_name: data.fullName,
           email: data.email,
+          cargo: data.cargo || 'Administrador',
           role: data.role,
           status: data.status,
         });
@@ -83,8 +199,13 @@ export async function saveAdminUserAction(data: {
 /** Alterar status do usuário */
 export async function toggleAdminUserStatusAction(
   id: string,
-  status: 'ativo' | 'convidado' | 'inativo'
+  status: AdminProfile['status']
 ) {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    throw new Error(check.error || 'Acesso negado.');
+  }
+
   const user = adminProfiles.find((u) => u.id === id);
   if (user) user.status = status;
 
@@ -110,6 +231,11 @@ export async function toggleAdminUserStatusAction(
 
 /** Excluir usuário administrador */
 export async function deleteAdminUserAction(id: string) {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    throw new Error(check.error || 'Acesso negado.');
+  }
+
   const idx = adminProfiles.findIndex((u) => u.id === id);
   if (idx > -1) adminProfiles.splice(idx, 1);
 

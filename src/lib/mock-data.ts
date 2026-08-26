@@ -494,18 +494,30 @@ export const adminProfiles: AdminProfile[] = [
     id: 'usr-1',
     fullName: 'Administrador Geral',
     email: 'admin@mensageiros.org',
+    cargo: 'Diretoria Executiva',
     role: 'admin',
-    status: 'ativo',
+    status: 'active',
     createdAt: '10 Jan 2026',
   },
   {
     id: 'usr-2',
     fullName: 'Ana Paula Silveira',
     email: 'anapaula@mensageirosdaesperanca.org',
+    cargo: 'Coordenadora Geral',
     role: 'admin',
-    status: 'ativo',
+    status: 'active',
     createdAt: '12 Jan 2026',
   },
+  {
+    id: 'usr-3',
+    fullName: 'Roberto Lima Santos',
+    email: 'roberto.social@mensageiros.org',
+    cargo: 'Assistente Social',
+    role: 'editor',
+    status: 'pending',
+    createdAt: '24 Ago 2026',
+  },
 ];
+
 
 

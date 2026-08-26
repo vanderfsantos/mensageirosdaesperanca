@@ -103,8 +103,9 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
     full_name TEXT,
     email TEXT,
+    cargo TEXT,
     role TEXT DEFAULT 'editor' CHECK (role IN ('admin', 'editor', 'comunicacao')),
-    status TEXT DEFAULT 'ativo' CHECK (status IN ('ativo', 'convidado', 'inativo')),
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'rejected', 'blocked', 'ativo', 'convidado', 'inativo')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -131,7 +132,7 @@ CREATE POLICY "Admins podem inserir ou deletar perfis"
         SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'
     ));
 
--- Trigger para criar perfil automaticamente ao cadastrar em auth.users
+-- Trigger para criar perfil automaticamente ao cadastrar em auth.users (sempre nasce como 'pending')
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger 
 LANGUAGE plpgsql 
@@ -145,18 +146,19 @@ BEGIN
         user_role := 'editor';
     END IF;
 
-    INSERT INTO public.profiles (id, full_name, email, role, status)
+    INSERT INTO public.profiles (id, full_name, email, cargo, role, status)
     VALUES (
         new.id,
         coalesce(new.raw_user_meta_data->>'full_name', 'Administrador'),
         new.email,
+        coalesce(new.raw_user_meta_data->>'cargo', 'Administrador'),
         user_role,
-        'ativo'
+        'pending'
     )
     ON CONFLICT (id) DO UPDATE
     SET full_name = EXCLUDED.full_name,
         email = EXCLUDED.email,
-        role = EXCLUDED.role;
+        cargo = EXCLUDED.cargo;
         
     RETURN new;
 EXCEPTION

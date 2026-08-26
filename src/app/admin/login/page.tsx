@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -10,7 +10,9 @@ import {
   Loader2, 
   AlertCircle,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Clock,
+  ShieldAlert
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Logo from '@/components/ui/Logo';
@@ -21,11 +23,28 @@ export default function LoginPage() {
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [warningType, setWarningType] = useState<'pending' | 'blocked' | 'error' | null>(null);
+
+  useEffect(() => {
+    // Detecta mensagens passadas por query string
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const errorParam = params.get('error');
+      if (errorParam === 'pending') {
+        setErrorMessage('Sua conta aguarda autorização de um administrador da instituição.');
+        setWarningType('pending');
+      } else if (errorParam === 'blocked' || errorParam === 'rejected') {
+        setErrorMessage('Acesso negado. Entre em contato com a diretoria.');
+        setWarningType('blocked');
+      }
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage(null);
+    setWarningType(null);
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -38,32 +57,77 @@ export default function LoginPage() {
           document.cookie = 'mock-session=admin_mensageiros_session; path=/; max-age=86400; SameSite=Lax';
           router.push('/admin');
           router.refresh();
+        } else if (email.trim() === 'pendente@mensageiros.org') {
+          setErrorMessage('Sua conta aguarda autorização de um administrador da instituição.');
+          setWarningType('pending');
+          setIsLoading(false);
         } else {
           setErrorMessage('E-mail ou senha administrativa incorretos (Modo Simulação).');
+          setWarningType('error');
           setIsLoading(false);
         }
       }, 1000);
       return;
     }
 
-    // Login Real no Supabase Auth
+    // Login Real no Supabase Auth com Verificação de Status
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         setErrorMessage(error.message || 'Falha ao autenticar.');
+        setWarningType('error');
         setIsLoading(false);
-      } else {
-        router.push('/admin');
-        router.refresh();
+        return;
       }
+
+      if (data.user) {
+        // Consulta o status do profile na tabela public.profiles
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('status, role, full_name')
+          .eq('id', data.user.id)
+          .maybeSingle();
+
+        const userStatus = profile?.status?.toLowerCase() || 'pending';
+
+        // 1. Status PENDENTE: Desconecta e avisa
+        if (userStatus === 'pending') {
+          await supabase.auth.signOut();
+          setErrorMessage('Sua conta aguarda autorização de um administrador da instituição.');
+          setWarningType('pending');
+          setIsLoading(false);
+          return;
+        }
+
+        // 2. Status REJEITADO ou BLOQUEADO: Desconecta e avisa
+        if (userStatus === 'rejected' || userStatus === 'blocked' || userStatus === 'inativo') {
+          await supabase.auth.signOut();
+          setErrorMessage('Acesso negado. Entre em contato com a diretoria.');
+          setWarningType('blocked');
+          setIsLoading(false);
+          return;
+        }
+
+        // 3. Status ATIVO: Redireciona para o painel
+        if (userStatus === 'active' || userStatus === 'ativo' || userStatus === 'convidado') {
+          router.push('/admin');
+          router.refresh();
+          return;
+        }
+      }
+
+      // Caso não caia em nenhum status conhecido
+      router.push('/admin');
+      router.refresh();
     } catch (err) {
       console.error('Login: Erro inesperado ao autenticar', err);
       setErrorMessage('Ocorreu um erro inesperado ao conectar ao servidor.');
+      setWarningType('error');
       setIsLoading(false);
     }
   };
@@ -81,15 +145,29 @@ export default function LoginPage() {
             <Sparkles className="h-3.5 w-3.5 text-brand-orange animate-pulse" /> Painel de Controle
           </div>
           <p className="text-xs text-slate-400 font-medium">
-            Área restrita à administração e coordenação da OSC.
+            Área restrita a operadores e administradores autorizados.
           </p>
         </div>
 
-        {/* Mensagem de Erro */}
+        {/* Mensagem de Erro / Alerta de Status */}
         {errorMessage && (
-          <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex gap-3 items-start animate-fade-in">
-            <AlertCircle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
-            <p className="text-xs text-rose-800 font-bold leading-relaxed">
+          <div
+            className={`p-4 rounded-2xl flex gap-3 items-start animate-fade-in border ${
+              warningType === 'pending'
+                ? 'bg-amber-50 border-amber-200 text-amber-900'
+                : warningType === 'blocked'
+                ? 'bg-purple-50 border-purple-200 text-purple-900'
+                : 'bg-rose-50 border-rose-200 text-rose-800'
+            }`}
+          >
+            {warningType === 'pending' ? (
+              <Clock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+            ) : warningType === 'blocked' ? (
+              <ShieldAlert className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
+            )}
+            <p className="text-xs font-bold leading-relaxed">
               {errorMessage}
             </p>
           </div>
@@ -142,12 +220,12 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-teal hover:bg-brand-teal-dark px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-brand-teal/20 active:scale-[0.98] transition-all focus:outline-none disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-teal hover:bg-brand-teal-dark px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-brand-teal/20 active:scale-[0.98] transition-all focus:outline-none disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="h-4.5 w-4.5 animate-spin" />
-                  Verificando...
+                  Verificando Acesso...
                 </>
               ) : (
                 <>
@@ -165,7 +243,7 @@ export default function LoginPage() {
             href="/admin/cadastro"
             className="text-slate-500 font-semibold hover:text-brand-teal transition-colors"
           >
-            Criar nova conta
+            Solicitar novo acesso
           </Link>
           <Link
             href="/admin/esqueci-senha"
@@ -180,7 +258,7 @@ export default function LoginPage() {
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center">
             <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
               🔧 Supabase não configurado localmente. <br />
-              Use <strong>admin@mensageiros.org</strong> / <strong>admin123</strong> (Modo Simulação).
+              Use <strong>admin@mensageiros.org</strong> / <strong>admin123</strong> (Ativo) ou <strong>pendente@mensageiros.org</strong> (Pendente).
             </p>
           </div>
         )}
