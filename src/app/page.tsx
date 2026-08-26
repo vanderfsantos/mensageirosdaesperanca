@@ -15,12 +15,24 @@ import {
   Users,
   Newspaper
 } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import { getCoursesEvents, getNewsPosts } from '@/lib/supabaseClient';
 import ImpactCounter from '@/components/ui/ImpactCounter';
 import EixoCard from '@/components/ui/EixoCard';
 import NegocioSocialCard from '@/components/ui/NegocioSocialCard';
 
-export default async function Home() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const code = params?.code;
+
+  if (code && typeof code === 'string') {
+    redirect(`/admin/redefinir-senha?code=${encodeURIComponent(code)}`);
+  }
+
   // Busca cursos e notícias dinamicamente do Supabase com fallback seguro
   const [allCourses, allNews] = await Promise.all([
     getCoursesEvents(),

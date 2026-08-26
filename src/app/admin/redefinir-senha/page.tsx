@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   Lock,
@@ -18,16 +18,18 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import Logo from '@/components/ui/Logo';
 
-export default function RedefinirSenhaPage() {
-  const router = useRouter();
+function RedefinirSenhaContent() {
   const [ready, setReady] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [tokenInvalid, setTokenInvalid] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const supabase = createClient();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Indicador visual de força de senha
   const getPasswordStrength = (pwd: string) => {
@@ -45,80 +47,56 @@ export default function RedefinirSenhaPage() {
       !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
       !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    // Modo Simulação: libera imediatamente para testes locais
     if (!isSupabaseConfigured) {
       setReady(true);
       return;
     }
 
-    const supabase = createClient();
+    const code = searchParams.get('code');
 
-    // 1. Escuta mudanças no estado de autenticação (PASSWORD_RECOVERY ou sessão ativa)
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (!error) {
+          setReady(true);
+        } else {
+          setMessage({
+            type: 'error',
+            text: 'Link de recuperação expirado ou inválido. Por favor, solicite um novo link.',
+          });
+        }
+      });
+    }
+
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY' || session) {
         setReady(true);
-        setTokenInvalid(false);
       }
     });
 
-    // 2. Verifica se já existe sessão ou se há código PKCE na URL
-    const checkInitialAuth = async () => {
-      // Checa sessão atual
-      const { data: { session } } = await supabase.auth.getSession();
+    // Se já houver sessão ativa
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setReady(true);
-        return;
       }
-
-      // Se houver parâmetro ?code= na URL (fluxo PKCE direto)
-      if (typeof window !== 'undefined') {
-        const searchParams = new URLSearchParams(window.location.search);
-        const code = searchParams.get('code');
-        if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (!error) {
-            setReady(true);
-            setTokenInvalid(false);
-            return;
-          } else {
-            console.warn('Falha na troca do código por sessão:', error.message);
-          }
-        }
-      }
-    };
-
-    checkInitialAuth();
-
-    // 3. Timeout defensivo: se após 3.5 segundos nenhuma sessão for detectada, sinaliza link inválido/expirado
-    const timer = setTimeout(async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session && !ready) {
-        // Verifica se há hash com access_token sendo processado
-        if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-          return;
-        }
-        setTokenInvalid(true);
-      }
-    }, 3500);
+    });
 
     return () => {
       subscription.unsubscribe();
-      clearTimeout(timer);
     };
-  }, [ready]);
+  }, [searchParams, supabase]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setMessage({ type: 'error', text: 'As senhas não coincidem. Por favor, verifique.' });
+      setMessage({ type: 'error', text: 'As senhas digitadas não coincidem. Por favor, verifique.' });
       return;
     }
 
     if (password.length < 6) {
-      setMessage({ type: 'error', text: 'A senha deve conter no mínimo 6 caracteres.' });
+      setMessage({ type: 'error', text: 'A nova senha deve ter no mínimo 6 caracteres.' });
       return;
     }
 
@@ -129,7 +107,6 @@ export default function RedefinirSenhaPage() {
       !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
       !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    // Modo Simulação
     if (!isSupabaseConfigured) {
       setTimeout(() => {
         setLoading(false);
@@ -141,34 +118,19 @@ export default function RedefinirSenhaPage() {
       return;
     }
 
-    // Supabase: atualiza senha do usuário autenticado
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
 
-      setLoading(false);
-
-      if (error) {
-        setMessage({
-          type: 'error',
-          text: error.message || 'Erro ao redefinir a senha. O link pode ter expirado — solicite um novo.',
-        });
-      } else {
-        setMessage({
-          type: 'success',
-          text: 'Senha atualizada com sucesso! Redirecionando para o login...',
-        });
-        setTimeout(() => {
-          router.push('/admin/login');
-        }, 2000);
-      }
-    } catch (err) {
-      console.error('Redefinir-senha: Erro inesperado', err);
-      setLoading(false);
+    if (error) {
+      setMessage({ type: 'error', text: error.message || 'Erro ao redefinir a senha.' });
+    } else {
       setMessage({
-        type: 'error',
-        text: 'Ocorreu um erro inesperado ao salvar a nova senha. Tente novamente.',
+        type: 'success',
+        text: 'Senha atualizada com sucesso! Redirecionando para o login...',
       });
+      setTimeout(() => {
+        router.push('/admin/login');
+      }, 2000);
     }
   };
 
@@ -188,11 +150,11 @@ export default function RedefinirSenhaPage() {
             Redefinir Senha
           </h1>
           <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-xs mx-auto">
-            Crie uma nova senha segura para acessar o painel administrativo da OSC.
+            Cadastre sua nova senha de acesso institucional.
           </p>
         </div>
 
-        {/* Mensagens de Alerta / Sucesso */}
+        {/* Mensagens de Alerta / Confirmação */}
         {message && (
           <div
             className={`p-4 rounded-2xl flex gap-3 items-start animate-fade-in border ${
@@ -210,15 +172,19 @@ export default function RedefinirSenhaPage() {
           </div>
         )}
 
-        {/* Caso 1: Token Inválido ou Expirado */}
-        {tokenInvalid && !ready && !message?.type && (
-          <div className="space-y-5 text-center py-2 animate-fade-in">
-            <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex flex-col items-center gap-2.5 text-center">
-              <AlertCircle className="h-7 w-7 text-rose-500" />
-              <p className="text-xs text-rose-800 font-bold leading-relaxed">
-                Link de recuperação inválido ou expirado. Solicite um novo link na página de login.
-              </p>
-            </div>
+        {/* Validação de Código de Segurança */}
+        {!ready && !message && (
+          <div className="py-8 flex flex-col items-center justify-center gap-3 text-center text-slate-500 animate-pulse">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <p className="text-xs font-semibold text-slate-600">
+              Validando código de segurança...
+            </p>
+          </div>
+        )}
+
+        {/* Se houver erro de token expirado */}
+        {message?.type === 'error' && !ready && (
+          <div className="pt-2">
             <Link
               href="/admin/esqueci-senha"
               className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary-hover transition-all"
@@ -228,19 +194,9 @@ export default function RedefinirSenhaPage() {
           </div>
         )}
 
-        {/* Caso 2: Validando Token de Autenticação */}
-        {!ready && !tokenInvalid && !message && (
-          <div className="py-8 flex flex-col items-center justify-center gap-3 text-center text-slate-500 animate-pulse">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-            <p className="text-xs font-semibold text-slate-600">
-              Validando token de autenticação...
-            </p>
-          </div>
-        )}
-
-        {/* Caso 3: Sessão Pronta / Formulário de Redefinição */}
+        {/* Formulário de Redefinição */}
         {ready && (!message || message.type !== 'success') && (
-          <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in">
+          <form onSubmit={handleReset} className="space-y-4 animate-fade-in">
 
             {/* Nova Senha */}
             <div className="space-y-1.5">
@@ -275,7 +231,7 @@ export default function RedefinirSenhaPage() {
               )}
             </div>
 
-            {/* Confirmação de Senha */}
+            {/* Confirmar Nova Senha */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">
                 Confirmar Nova Senha *
@@ -322,7 +278,7 @@ export default function RedefinirSenhaPage() {
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Salvando Nova Senha...
+                    Salvando nova senha...
                   </>
                 ) : (
                   <>
@@ -348,5 +304,19 @@ export default function RedefinirSenhaPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function RedefinirSenhaPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-neutral-bg">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <RedefinirSenhaContent />
+    </Suspense>
   );
 }
