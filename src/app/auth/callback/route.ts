@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') ?? '/admin/redefinir-senha';
+  const next = searchParams.get('next') ?? '/admin/login';
 
   if (code) {
     const cookieStore = await cookies();
@@ -29,8 +29,9 @@ export async function GET(request: Request) {
           },
         }
       );
-      
+
       const { error } = await supabase.auth.exchangeCodeForSession(code);
+
       if (!error) {
         return NextResponse.redirect(`${origin}${next}`);
       }
@@ -38,6 +39,5 @@ export async function GET(request: Request) {
     }
   }
 
-  // Se houver erro no token ou ausência de código, redireciona para login com mensagem de link expirado
-  return NextResponse.redirect(`${origin}/admin/login?error=link_expirado`);
+  return NextResponse.redirect(`${origin}/admin/login?error=link_invalido`);
 }

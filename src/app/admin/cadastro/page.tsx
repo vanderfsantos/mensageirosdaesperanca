@@ -118,10 +118,15 @@ export default function CadastroAdminPage() {
     // Cadastro Real no Supabase Auth
     try {
       const supabase = createClient();
+      const redirectUrl = typeof window !== 'undefined'
+        ? `${window.location.origin}/auth/callback?next=/admin/aguardando-aprovacao`
+        : undefined;
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             full_name: fullName,
             cargo: role || 'Administrador',
