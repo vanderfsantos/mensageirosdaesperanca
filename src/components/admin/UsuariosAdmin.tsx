@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import {
   Search, Plus, Edit, Trash2, Shield, UserCheck, Mail,
   AlertTriangle, Loader2, X, Save, CheckCircle2, Clock, Ban, ChevronLeft, ChevronRight,
-  Briefcase, Check, XCircle, ShieldAlert, UserPlus, Users
+  Briefcase, Check, XCircle, ShieldAlert, UserPlus, Users, Eye, EyeOff
 } from 'lucide-react';
 import { AdminProfile } from '@/types';
 import {
@@ -71,6 +71,7 @@ export default function UsuariosAdmin({
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState<AdminProfile | null>(null);
   const [form, setForm] = useState(EMPTY_USER);
+  const [showModalPassword, setShowModalPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -829,21 +830,37 @@ export default function UsuariosAdmin({
                 </div>
               </div>
 
-              {!editingUser && (
-                <div>
-                  <label className={labelClass}>Senha Provisória (Opcional)</label>
+              <div>
+                <label className={labelClass}>
+                  {editingUser ? 'Nova Senha / Senha Provisória (Opcional)' : 'Senha Provisória (Opcional)'}
+                </label>
+                <div className="relative">
                   <input
-                    type="password"
+                    type={showModalPassword ? 'text' : 'password'}
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    placeholder="Mínimo 6 caracteres (se aplicável)"
-                    className={inputClass}
+                    placeholder={
+                      editingUser
+                        ? 'Deixe em branco para manter a senha atual (mínimo 6 caracteres)'
+                        : 'Mínimo 6 caracteres (se aplicável)'
+                    }
+                    className={`${inputClass} pr-11`}
                   />
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Se vazio, o usuário receberá link de definição de senha no primeiro acesso.
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowModalPassword(!showModalPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                    aria-label={showModalPassword ? 'Ocultar senha' : 'Exibir senha'}
+                  >
+                    {showModalPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
-              )}
+                <p className="text-[10px] text-slate-400 mt-1">
+                  {editingUser
+                    ? 'Define uma nova senha provisória para o operador sem precisar do envio de e-mails.'
+                    : 'Se vazio, o usuário receberá link de definição de senha no primeiro acesso.'}
+                </p>
+              </div>
             </div>
 
             <div className="flex gap-3 pt-2">

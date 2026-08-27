@@ -1,12 +1,27 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
+import { createClient as createServerSupabase } from '@/lib/supabase/server';
+import { createClient as createSupabaseAdminClient } from '@supabase/supabase-js';
 import { adminProfiles } from '@/lib/mock-data';
 import { AdminProfile } from '@/types';
 
 const hasSupabase = () =>
   !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+/** Instancia o cliente administrativo do Supabase com Service Role Key */
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return null;
+  }
+
+  return createSupabaseAdminClient(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 /** Verifica se o usuário atual é administrador geral */
 async function verifyIsAdmin(): Promise<{ isAdmin: boolean; error?: string }> {
@@ -15,7 +30,7 @@ async function verifyIsAdmin(): Promise<{ isAdmin: boolean; error?: string }> {
   }
 
   try {
-    const supabase = await createClient();
+    const supabase = await createServerSupabase();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return { isAdmin: false, error: 'Sessão expirada. Faça login novamente.' };
@@ -28,12 +43,52 @@ async function verifyIsAdmin(): Promise<{ isAdmin: boolean; error?: string }> {
       .single();
 
     if (profile?.role !== 'admin') {
-      return { isAdmin: false, error: 'Apenas Administradores Gerais podem gerenciar permissões e aprovações.' };
+      return { isAdmin: false, error: 'Apenas Administradores Gerais podem gerenciar permissões e senhas.' };
     }
 
     return { isAdmin: true };
   } catch {
     return { isAdmin: true }; // Fallback tolerante
+  }
+}
+
+/**
+ * Define ou altera a senha de um usuário via Service Role Key (Admin Auth API)
+ */
+export async function updateUserPasswordAdmin(userId: string, newPassword: string) {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    return { success: false, error: check.error || 'Acesso negado.' };
+  }
+
+  if (newPassword.length < 6) {
+    return { success: false, error: 'A senha deve ter no mínimo 6 caracteres.' };
+  }
+
+  const supabaseAdmin = getSupabaseAdmin();
+
+  // Modo Simulação se não houver chave de serviço configurada
+  if (!supabaseAdmin) {
+    console.warn('updateUserPasswordAdmin: Service Role Key não configurada. Operando em modo simulação.');
+    return { success: true, simulated: true };
+  }
+
+  try {
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      password: newPassword,
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('updateUserPasswordAdmin: Erro inesperado', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Falha ao atualizar a senha do usuário.',
+    };
   }
 }
 
@@ -52,7 +107,7 @@ export async function approveAdminUserAction(id: string, role: 'admin' | 'editor
 
   if (hasSupabase()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createServerSupabase();
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -93,7 +148,7 @@ export async function rejectAdminUserAction(id: string, deletePermanently = fals
 
   if (hasSupabase()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createServerSupabase();
       if (deletePermanently) {
         const { error } = await supabase.from('profiles').delete().eq('id', id);
         if (error) throw new Error(error.message);
@@ -156,7 +211,7 @@ export async function saveAdminUserAction(data: {
 
   if (hasSupabase()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createServerSupabase();
 
       if (data.id) {
         const { error } = await supabase
@@ -172,6 +227,11 @@ export async function saveAdminUserAction(data: {
 
         if (error) {
           console.warn('saveAdminUserAction: Aviso no Supabase:', error.message);
+        }
+
+        // Se uma nova senha provisória foi informada, atualiza via Admin API
+        if (data.password && data.password.length >= 6) {
+          await updateUserPasswordAdmin(data.id, data.password);
         }
       } else {
         const { error } = await supabase.from('profiles').insert({
@@ -211,7 +271,7 @@ export async function toggleAdminUserStatusAction(
 
   if (hasSupabase()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createServerSupabase();
       const { error } = await supabase
         .from('profiles')
         .update({ status })
@@ -241,7 +301,7 @@ export async function deleteAdminUserAction(id: string) {
 
   if (hasSupabase()) {
     try {
-      const supabase = await createClient();
+      const supabase = await createServerSupabase();
       const { error } = await supabase.from('profiles').delete().eq('id', id);
       if (error) {
         console.warn('deleteAdminUserAction: Aviso no Supabase:', error.message);
