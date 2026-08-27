@@ -480,8 +480,8 @@ export default function UsuariosAdmin({
               <p className="font-semibold">Nenhum operador encontrado.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full min-w-[650px] text-sm">
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
                     <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-5 py-3.5">

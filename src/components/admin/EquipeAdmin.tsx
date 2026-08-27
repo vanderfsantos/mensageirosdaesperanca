@@ -84,7 +84,7 @@ export default function EquipeAdmin({ initialMembers }: { initialMembers: TeamMe
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input type="text" placeholder="Buscar por nome ou cargo..." value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }} className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
-        <button onClick={openAdd} className="inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-secondary-hover transition-colors whitespace-nowrap">
+        <button onClick={openAdd} className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors whitespace-nowrap cursor-pointer">
           <Plus className="h-4 w-4" /> Novo Membro
         </button>
       </div>
@@ -93,7 +93,8 @@ export default function EquipeAdmin({ initialMembers }: { initialMembers: TeamMe
         {paginated.length === 0 ? (
           <div className="py-16 text-center text-slate-400"><Users className="h-10 w-10 mx-auto mb-3 opacity-30" /><p className="font-semibold">Nenhum membro encontrado.</p></div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[600px] text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-5 py-3.5">Membro</th>
@@ -131,6 +132,7 @@ export default function EquipeAdmin({ initialMembers }: { initialMembers: TeamMe
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

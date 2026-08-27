@@ -76,8 +76,8 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
   return (
     <div className="space-y-4">
       {/* Controles de busca e filtro */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 w-full">
+        <div className="relative w-full">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
@@ -90,7 +90,7 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
         <select
           value={categoryFilter}
           onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="all">Todas as categorias</option>
           {['Cursos','Eventos e Campanhas','Parcerias','Impacto','Artigos','Imprensa'].map((c) => (
@@ -100,7 +100,7 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="all">Todos os status</option>
           <option value="publicado">Publicado</option>
@@ -108,7 +108,7 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
         </select>
         <Link
           href="/admin/noticias/nova"
-          className="inline-flex items-center gap-2 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors whitespace-nowrap"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors whitespace-nowrap"
         >
           <Plus className="h-4 w-4" /> Nova Notícia
         </Link>
@@ -122,7 +122,8 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
             <p className="font-semibold">Nenhuma notícia encontrada.</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[640px] text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-5 py-3.5">Título</th>
@@ -206,6 +207,7 @@ export default function NoticiasCrudList({ initialPosts }: { initialPosts: NewsP
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

@@ -68,15 +68,15 @@ export default function MensagensAdmin({ initialMessages }: { initialMessages: C
       )}
 
       {/* Controles */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full">
+        <div className="relative w-full">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input type="text" placeholder="Buscar por nome, e-mail ou assunto..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
-        <select value={subjectFilter} onChange={(e) => setSubjectFilter(e.target.value)} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
+        <select value={subjectFilter} onChange={(e) => setSubjectFilter(e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
           {SUBJECT_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
           <option value="all">Todos os status</option>
           <option value="pendente">Pendentes</option>
           <option value="respondido">Respondidos</option>
@@ -92,7 +92,8 @@ export default function MensagensAdmin({ initialMessages }: { initialMessages: C
             <p className="font-semibold">Nenhuma mensagem encontrada.</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[650px] text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-5 py-3.5">Remetente</th>
@@ -151,6 +152,7 @@ export default function MensagensAdmin({ initialMessages }: { initialMessages: C
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

@@ -112,20 +112,20 @@ export default function TransparenciaAdmin({ initialDocs }: { initialDocs: Trans
   return (
     <div className="space-y-4">
       {/* Controles */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 w-full">
+        <div className="relative w-full">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input type="text" placeholder="Buscar documento..." value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }} className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary" />
         </div>
-        <select value={categoryFilter} onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
+        <select value={categoryFilter} onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
           <option value="all">Todas as seções</option>
           {Object.entries(CATEGORY_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <select value={yearFilter} onChange={(e) => { setYearFilter(e.target.value); setCurrentPage(1); }} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
+        <select value={yearFilter} onChange={(e) => { setYearFilter(e.target.value); setCurrentPage(1); }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary">
           <option value="all">Todos os anos</option>
           {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
         </select>
-        <button onClick={openAdd} className="inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-secondary-hover transition-colors whitespace-nowrap">
+        <button onClick={openAdd} className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-brand-orange/20 hover:bg-brand-orange-dark transition-colors whitespace-nowrap cursor-pointer">
           <Plus className="h-4 w-4" /> Novo Documento
         </button>
       </div>
@@ -135,7 +135,8 @@ export default function TransparenciaAdmin({ initialDocs }: { initialDocs: Trans
         {paginated.length === 0 ? (
           <div className="py-16 text-center text-slate-400"><FileText className="h-10 w-10 mx-auto mb-3 opacity-30" /><p className="font-semibold">Nenhum documento encontrado.</p></div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[650px] text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest px-5 py-3.5">Documento</th>
@@ -186,6 +187,7 @@ export default function TransparenciaAdmin({ initialDocs }: { initialDocs: Trans
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
