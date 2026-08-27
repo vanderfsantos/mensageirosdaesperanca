@@ -7,6 +7,7 @@ const PUBLIC_ADMIN_ROUTES = [
   '/admin/cadastro',
   '/admin/esqueci-senha',
   '/admin/redefinir-senha',
+  '/admin/aguardando-aprovacao',
 ];
 
 export async function middleware(request: NextRequest) {
@@ -36,14 +37,12 @@ export async function middleware(request: NextRequest) {
   const mockSession = request.cookies.get('mock-session')?.value;
   const hasAnyAuthCookie = hasSupabaseCookie || !!mockSession;
 
-  // 1. Otimização Instantânea: Se NÃO há cookies de sessão
+  // 1. Se NÃO há cookies de sessão
   if (!hasAnyAuthCookie) {
-    // Se está em rota protegida do admin, redireciona para login sem fazer requisições lentas
     if (!isPublicAdminRoute) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);
     }
-    // Se está em rota pública do admin (login, cadastro), permite direto
     return response;
   }
 
@@ -60,7 +59,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 3. Supabase SSR — Validação com Proteção contra Timeout (Timeout Safe)
+  // 3. Supabase SSR — Validação de Usuário e Verificação Obrigatória de Status
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
@@ -77,13 +76,7 @@ export async function middleware(request: NextRequest) {
   });
 
   try {
-    // Timeout de 2.5s para evitar que a Vercel Edge mate com 504 GATEWAY_TIMEOUT
-    const getUserPromise = supabase.auth.getUser();
-    const timeoutPromise = new Promise<{ data: { user: null }; error: Error }>((resolve) =>
-      setTimeout(() => resolve({ data: { user: null }, error: new Error('Timeout') }), 2500)
-    );
-
-    const { data: { user } } = await Promise.race([getUserPromise, timeoutPromise]);
+    const { data: { user } } = await supabase.auth.getUser();
 
     // Rota protegida sem usuário autenticado → login
     if (!user && !isPublicAdminRoute) {
@@ -91,13 +84,35 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    // Usuário autenticado tentando acessar o login → dashboard
-    if (user && pathname === '/admin/login') {
-      const redirectUrl = new URL('/admin', request.url);
-      return NextResponse.redirect(redirectUrl);
+    if (user) {
+      // Checagem obrigatória do status do usuário na tabela public.profiles
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('status')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      const userStatus = profile?.status?.toLowerCase() || 'pending';
+
+      // Se o status for diferente de 'active', desconecta e redireciona
+      if (userStatus !== 'active' && userStatus !== 'ativo') {
+        if (!isPublicAdminRoute) {
+          await supabase.auth.signOut();
+          const redirectUrl = new URL('/admin/login', request.url);
+          const errorParam = userStatus === 'blocked' ? 'bloqueado' : 'pendente_aprovacao';
+          redirectUrl.searchParams.set('error', errorParam);
+          return NextResponse.redirect(redirectUrl);
+        }
+      } else {
+        // Usuário ATIVO tentando acessar a tela de login → redireciona para dashboard
+        if (pathname === '/admin/login') {
+          const redirectUrl = new URL('/admin', request.url);
+          return NextResponse.redirect(redirectUrl);
+        }
+      }
     }
   } catch (err) {
-    console.warn('Middleware: Validação Supabase falhou ou timeout:', err);
+    console.warn('Middleware: Validação Supabase falhou:', err);
     if (!isPublicAdminRoute) {
       const redirectUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(redirectUrl);

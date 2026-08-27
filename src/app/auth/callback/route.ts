@@ -36,6 +36,10 @@ export async function GET(request: Request) {
     });
 
     if (!error) {
+      // Se for confirmação de cadastro (signup), força o logout para não manter sessão aberta
+      if (type === 'signup' || next.includes('aguardando-aprovacao')) {
+        await supabase.auth.signOut();
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
     console.warn('Auth Callback: Erro ao verificar token_hash:', error.message);
@@ -46,6 +50,10 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // Se for confirmação de cadastro, força o logout para não manter sessão aberta
+      if (next.includes('aguardando-aprovacao')) {
+        await supabase.auth.signOut();
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
     console.warn('Auth Callback: Erro ao trocar code por sessão:', error.message);

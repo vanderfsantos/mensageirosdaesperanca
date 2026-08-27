@@ -33,9 +33,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     '/admin/cadastro',
     '/admin/esqueci-senha',
     '/admin/redefinir-senha',
+    '/admin/aguardando-aprovacao',
   ].includes(pathname);
 
-  // Carrega a sessão do usuário administrador (Supabase ou Cookie Mock)
+  // Carrega a sessão do usuário administrador e valida status
   useEffect(() => {
     if (isAuthPage) return;
 
@@ -53,11 +54,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setAdminEmail(user.email || 'admin@mensageiros.org');
+
+        // Checagem de status na tabela public.profiles
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('status')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        const userStatus = profile?.status?.toLowerCase() || 'pending';
+        if (userStatus !== 'active' && userStatus !== 'ativo') {
+          await supabase.auth.signOut();
+          router.push(`/admin/login?error=${userStatus === 'blocked' ? 'bloqueado' : 'pendente_aprovacao'}`);
+        }
       }
     };
 
     loadSession();
-  }, [pathname, isAuthPage]);
+  }, [pathname, isAuthPage, router]);
 
   const handleLogout = async () => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -150,7 +164,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
         </div>
 
-
         {/* Rodapé da Sidebar */}
         <div className="p-4 border-t border-slate-800 shrink-0">
           <button
@@ -237,4 +250,3 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
-

@@ -1,24 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { 
   Lock, 
   Mail, 
   Loader2, 
-  AlertCircle,
-  Sparkles,
-  ArrowRight,
-  Clock,
-  ShieldAlert
+  AlertCircle, 
+  Sparkles, 
+  ArrowRight, 
+  Clock, 
+  ShieldAlert,
+  ShieldCheck
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Logo from '@/components/ui/Logo';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -26,22 +28,18 @@ export default function LoginPage() {
   const [warningType, setWarningType] = useState<'pending' | 'blocked' | 'error' | null>(null);
 
   useEffect(() => {
-    // Detecta mensagens passadas por query string
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const errorParam = params.get('error');
-      if (errorParam === 'pending') {
-        setErrorMessage('Sua conta aguarda autorização de um administrador da instituição.');
-        setWarningType('pending');
-      } else if (errorParam === 'blocked' || errorParam === 'rejected') {
-        setErrorMessage('Acesso negado. Entre em contato com a diretoria.');
-        setWarningType('blocked');
-      } else if (errorParam === 'link_expirado') {
-        setErrorMessage('O link de recuperação expirou ou é inválido. Por favor, solicite um novo link de redefinição.');
-        setWarningType('error');
-      }
+    const errorParam = searchParams.get('error');
+    if (errorParam === 'pendente_aprovacao' || errorParam === 'pending') {
+      setErrorMessage('Sua conta foi confirmada, mas ainda aguarda aprovação de um administrador da instituição para acessar o painel.');
+      setWarningType('pending');
+    } else if (errorParam === 'bloqueado' || errorParam === 'blocked' || errorParam === 'rejected') {
+      setErrorMessage('Acesso bloqueado pela coordenação.');
+      setWarningType('blocked');
+    } else if (errorParam === 'link_expirado' || errorParam === 'link_invalido') {
+      setErrorMessage('O link de acesso expirou ou é inválido. Por favor, solicite um novo link.');
+      setWarningType('error');
     }
-  }, []);
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,12 +54,11 @@ export default function LoginPage() {
     if (!supabaseUrl || !supabaseAnonKey) {
       setTimeout(() => {
         if (email.trim() === 'admin@mensageiros.org' && password === 'admin123') {
-          // Define cookie de simulação válido por 24 horas
           document.cookie = 'mock-session=admin_mensageiros_session; path=/; max-age=86400; SameSite=Lax';
           router.push('/admin');
           router.refresh();
         } else if (email.trim() === 'pendente@mensageiros.org') {
-          setErrorMessage('Sua conta aguarda autorização de um administrador da instituição.');
+          setErrorMessage('Sua conta foi confirmada, mas ainda aguarda aprovação de um administrador da instituição para acessar o painel.');
           setWarningType('pending');
           setIsLoading(false);
         } else {
@@ -73,11 +70,11 @@ export default function LoginPage() {
       return;
     }
 
-    // Login Real no Supabase Auth com Verificação de Status
+    // Login Real no Supabase Auth com Verificação Obrigatória de Status
     try {
       const supabase = createClient();
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       });
 
@@ -98,19 +95,19 @@ export default function LoginPage() {
 
         const userStatus = profile?.status?.toLowerCase() || 'pending';
 
-        // 1. Status PENDENTE: Desconecta e avisa
+        // 1. Status PENDENTE: Desconecta e exibe aviso amigável
         if (userStatus === 'pending') {
           await supabase.auth.signOut();
-          setErrorMessage('Sua conta aguarda autorização de um administrador da instituição.');
+          setErrorMessage('Sua conta foi confirmada, mas ainda aguarda aprovação de um administrador da instituição para acessar o painel.');
           setWarningType('pending');
           setIsLoading(false);
           return;
         }
 
-        // 2. Status REJEITADO ou BLOQUEADO: Desconecta e avisa
+        // 2. Status REJEITADO ou BLOQUEADO: Desconecta e avisa bloqueio
         if (userStatus === 'rejected' || userStatus === 'blocked' || userStatus === 'inativo') {
           await supabase.auth.signOut();
-          setErrorMessage('Acesso negado. Entre em contato com a diretoria.');
+          setErrorMessage('Acesso bloqueado pela coordenação.');
           setWarningType('blocked');
           setIsLoading(false);
           return;
@@ -256,7 +253,7 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Informação Resiliente de Mock local */}
+        {/* Informação de Mock local */}
         {(!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) && (
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center">
             <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
@@ -267,5 +264,19 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-brand-gray-light">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-teal" />
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }
