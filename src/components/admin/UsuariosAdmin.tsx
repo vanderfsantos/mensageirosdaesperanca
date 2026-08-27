@@ -149,7 +149,7 @@ export default function UsuariosAdmin({
 
     setIsSaving(true);
     try {
-      await saveAdminUserAction({
+      const res = await saveAdminUserAction({
         id: editingUser?.id,
         fullName: form.fullName,
         email: form.email,
@@ -158,6 +158,11 @@ export default function UsuariosAdmin({
         status: form.status,
         password: form.password || undefined,
       });
+
+      if (!res.success) {
+        setFormError(res.error || 'Erro ao salvar administrador.');
+        return;
+      }
 
       if (editingUser) {
         setUsers((prev) =>
@@ -176,7 +181,7 @@ export default function UsuariosAdmin({
         );
       } else {
         const newUser: AdminProfile = {
-          id: `usr-${Date.now()}`,
+          id: res.id || `usr-${Date.now()}`,
           fullName: form.fullName,
           email: form.email,
           cargo: form.cargo || 'Administrador',
