@@ -9,6 +9,7 @@ import {
   Plus,
   Heart
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/server';
 import { courseEvents, newsPosts, transparencyDocs, impactStories } from '@/lib/mock-data';
 
 export const metadata = {
@@ -16,7 +17,33 @@ export const metadata = {
   description: 'Visão geral administrativa e atalhos rápidos de gerenciamento.',
 };
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  let userName = 'Administrador(a)';
+
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (profile?.full_name?.trim()) {
+          userName = profile.full_name.trim();
+        } else if (user.user_metadata?.full_name?.trim()) {
+          userName = user.user_metadata.full_name.trim();
+        } else if (user.email) {
+          userName = user.email.split('@')[0];
+        }
+      }
+    } catch {
+      // Fallback gracioso
+    }
+  }
+
   // Métricas dinâmicas do sistema
   const totalCursos = courseEvents.length;
   const totalNoticias = newsPosts.length;
@@ -33,7 +60,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-10">
-      {/* Bloco de Boas-vindas */}
+      {/* Bloco de Boas-vindas Dinâmico */}
       <div className="bg-slate-900 text-white p-8 rounded-3xl space-y-4 relative overflow-hidden shadow-md">
         <div className="absolute top-0 right-0 w-36 h-36 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
         
@@ -42,7 +69,7 @@ export default function AdminDashboardPage() {
             <ShieldCheck className="h-3.5 w-3.5 text-secondary animate-pulse" /> Ambiente Seguro
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Olá, Administrador(a)
+            Olá, {userName}
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-light">
             Bem-vindo(a) ao painel de controle da OSC <strong>Mensageiros da Esperança</strong>. Publique oportunidades, gerencie dados de compliance legal e visualize relatos de impacto comunitário.
@@ -59,7 +86,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Seção de Ações Rápidas (Novo Requisito) */}
+      {/* Seção de Ações Rápidas */}
       <div className="space-y-4">
         <h3 className="font-extrabold text-slate-800 text-base">Atalhos e Ações Rápidas</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
