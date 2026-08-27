@@ -189,8 +189,8 @@ export default function UsuariosAdmin({
         setUsers((prev) => [newUser, ...prev]);
       }
       setShowModal(false);
-    } catch {
-      setFormError('Erro ao salvar administrador. Verifique suas permissões.');
+    } catch (err: unknown) {
+      setFormError(err instanceof Error ? err.message : 'Erro ao salvar administrador. Verifique suas permissões.');
     } finally {
       setIsSaving(false);
     }

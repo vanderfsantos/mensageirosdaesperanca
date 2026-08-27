@@ -53,6 +53,126 @@ async function verifyIsAdmin(): Promise<{ isAdmin: boolean; error?: string }> {
 }
 
 /**
+ * Atualiza os dados do operador no auth.users e na tabela public.profiles via Service Role Key
+ */
+export async function updateUserAdmin(
+  userId: string,
+  data: {
+    fullName: string;
+    email: string;
+    cargo?: string;
+    role: AdminProfile['role'];
+    status: AdminProfile['status'];
+    password?: string;
+  }
+) {
+  const check = await verifyIsAdmin();
+  if (!check.isAdmin) {
+    return { success: false, error: check.error || 'Acesso negado.' };
+  }
+
+  // Atualiza no cache / mock data local
+  const idx = adminProfiles.findIndex((u) => u.id === userId || u.email === data.email);
+  if (idx > -1) {
+    adminProfiles[idx] = {
+      ...adminProfiles[idx],
+      fullName: data.fullName,
+      email: data.email,
+      cargo: data.cargo,
+      role: data.role,
+      status: data.status,
+    };
+  }
+
+  if (!hasSupabase()) {
+    revalidatePath('/admin/usuarios');
+    return { success: true, simulated: true };
+  }
+
+  const supabaseAdmin = getSupabaseAdmin();
+  if (!supabaseAdmin) {
+    // Fallback com cliente autenticado padrão caso a service role key não esteja no ambiente
+    try {
+      const supabase = await createServerSupabase();
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: data.fullName,
+          email: data.email,
+          cargo: data.cargo,
+          role: data.role,
+          status: data.status,
+        })
+        .eq('id', userId);
+
+      if (profileError) {
+        return { success: false, error: `Erro ao atualizar Perfil: ${profileError.message}` };
+      }
+      revalidatePath('/admin/usuarios');
+      return { success: true };
+    } catch (err: unknown) {
+      return { success: false, error: err instanceof Error ? err.message : 'Falha ao atualizar.' };
+    }
+  }
+
+  try {
+    // 1. Atualiza os dados de autenticação no auth.users (e-mail, confirmação e senha provisória)
+    const authUpdatePayload: {
+      email: string;
+      email_confirm?: boolean;
+      password?: string;
+      user_metadata?: Record<string, unknown>;
+    } = {
+      email: data.email,
+      email_confirm: true, // Auto-confirma o novo e-mail sem travar em verificação
+      user_metadata: {
+        full_name: data.fullName,
+        cargo: data.cargo,
+        role: data.role,
+      },
+    };
+
+    if (data.password && data.password.trim().length >= 6) {
+      authUpdatePayload.password = data.password.trim();
+    }
+
+    const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
+      userId,
+      authUpdatePayload
+    );
+
+    if (authError) {
+      console.warn('updateUserAdmin: Aviso ao atualizar auth.users:', authError.message);
+    }
+
+    // 2. Atualiza os dados na tabela public.profiles
+    const { error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .update({
+        full_name: data.fullName,
+        email: data.email,
+        cargo: data.cargo,
+        role: data.role,
+        status: data.status,
+      })
+      .eq('id', userId);
+
+    if (profileError) {
+      return { success: false, error: `Erro ao atualizar Perfil: ${profileError.message}` };
+    }
+
+    revalidatePath('/admin/usuarios');
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('updateUserAdmin erro:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Erro inesperado ao atualizar operador.',
+    };
+  }
+}
+
+/**
  * Define ou altera a senha de um usuário via Service Role Key (Admin Auth API)
  */
 export async function updateUserPasswordAdmin(userId: string, newPassword: string) {
@@ -67,7 +187,6 @@ export async function updateUserPasswordAdmin(userId: string, newPassword: strin
 
   const supabaseAdmin = getSupabaseAdmin();
 
-  // Modo Simulação se não houver chave de serviço configurada
   if (!supabaseAdmin) {
     console.warn('updateUserPasswordAdmin: Service Role Key não configurada. Operando em modo simulação.');
     return { success: true, simulated: true };
@@ -107,18 +226,29 @@ export async function approveAdminUserAction(id: string, role: 'admin' | 'editor
 
   if (hasSupabase()) {
     try {
-      const supabase = await createServerSupabase();
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          status: 'active',
-          role,
-        })
-        .eq('id', id);
+      const supabaseAdmin = getSupabaseAdmin();
+      if (supabaseAdmin) {
+        await supabaseAdmin
+          .from('profiles')
+          .update({
+            status: 'active',
+            role,
+          })
+          .eq('id', id);
+      } else {
+        const supabase = await createServerSupabase();
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            status: 'active',
+            role,
+          })
+          .eq('id', id);
 
-      if (error) {
-        console.warn('approveAdminUserAction: Erro no Supabase:', error.message);
-        throw new Error(error.message);
+        if (error) {
+          console.warn('approveAdminUserAction: Erro no Supabase:', error.message);
+          throw new Error(error.message);
+        }
       }
     } catch (err: unknown) {
       console.warn('approveAdminUserAction erro:', err);
@@ -148,16 +278,29 @@ export async function rejectAdminUserAction(id: string, deletePermanently = fals
 
   if (hasSupabase()) {
     try {
-      const supabase = await createServerSupabase();
-      if (deletePermanently) {
-        const { error } = await supabase.from('profiles').delete().eq('id', id);
-        if (error) throw new Error(error.message);
+      const supabaseAdmin = getSupabaseAdmin();
+      if (supabaseAdmin) {
+        if (deletePermanently) {
+          await supabaseAdmin.from('profiles').delete().eq('id', id);
+          await supabaseAdmin.auth.admin.deleteUser(id);
+        } else {
+          await supabaseAdmin
+            .from('profiles')
+            .update({ status: 'rejected' })
+            .eq('id', id);
+        }
       } else {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ status: 'rejected' })
-          .eq('id', id);
-        if (error) throw new Error(error.message);
+        const supabase = await createServerSupabase();
+        if (deletePermanently) {
+          const { error } = await supabase.from('profiles').delete().eq('id', id);
+          if (error) throw new Error(error.message);
+        } else {
+          const { error } = await supabase
+            .from('profiles')
+            .update({ status: 'rejected' })
+            .eq('id', id);
+          if (error) throw new Error(error.message);
+        }
       }
     } catch (err: unknown) {
       console.warn('rejectAdminUserAction erro:', err);
@@ -184,56 +327,67 @@ export async function saveAdminUserAction(data: {
     throw new Error(check.error || 'Acesso negado.');
   }
 
-  const finalId = data.id && data.id.trim() !== '' ? data.id : `usr-${Date.now()}`;
-
-  const idx = adminProfiles.findIndex((u) => u.id === finalId || u.email === data.email);
-  if (idx > -1) {
-    adminProfiles[idx] = {
-      ...adminProfiles[idx],
+  // Se já possui ID (edição), delega para updateUserAdmin para sincronizar auth.users e profiles
+  if (data.id && data.id.trim() !== '') {
+    const res = await updateUserAdmin(data.id, {
       fullName: data.fullName,
       email: data.email,
       cargo: data.cargo,
       role: data.role,
       status: data.status,
-    };
-  } else {
-    const newUser: AdminProfile = {
-      id: finalId,
-      fullName: data.fullName,
-      email: data.email,
-      cargo: data.cargo || 'Administrador',
-      role: data.role,
-      status: data.status,
-      createdAt: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', ''),
-    };
-    adminProfiles.unshift(newUser);
+      password: data.password,
+    });
+
+    if (!res.success) {
+      throw new Error(res.error || 'Falha ao salvar operador.');
+    }
+    return { success: true, id: data.id };
   }
+
+  const finalId = `usr-${Date.now()}`;
+
+  const newUser: AdminProfile = {
+    id: finalId,
+    fullName: data.fullName,
+    email: data.email,
+    cargo: data.cargo || 'Administrador',
+    role: data.role,
+    status: data.status,
+    createdAt: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', ''),
+  };
+  adminProfiles.unshift(newUser);
 
   if (hasSupabase()) {
     try {
-      const supabase = await createServerSupabase();
-
-      if (data.id) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({
+      const supabaseAdmin = getSupabaseAdmin();
+      if (supabaseAdmin) {
+        // Cria usuário no auth.users via Admin API
+        const { data: authData, error: authErr } = await supabaseAdmin.auth.admin.createUser({
+          email: data.email,
+          email_confirm: true,
+          password: data.password && data.password.length >= 6 ? data.password : undefined,
+          user_metadata: {
             full_name: data.fullName,
-            email: data.email,
             cargo: data.cargo,
             role: data.role,
-            status: data.status,
-          })
-          .eq('id', data.id);
+          },
+        });
 
-        if (error) {
-          console.warn('saveAdminUserAction: Aviso no Supabase:', error.message);
-        }
+        const createdId = authData?.user?.id || finalId;
 
-        // Se uma nova senha provisória foi informada, atualiza via Admin API
-        if (data.password && data.password.length >= 6) {
-          await updateUserPasswordAdmin(data.id, data.password);
-        }
+        await supabaseAdmin.from('profiles').upsert({
+          id: createdId,
+          full_name: data.fullName,
+          email: data.email,
+          cargo: data.cargo || 'Administrador',
+          role: data.role,
+          status: data.status,
+        });
+
+        revalidatePath('/admin/usuarios');
+        return { success: true, id: createdId };
       } else {
+        const supabase = await createServerSupabase();
         const { error } = await supabase.from('profiles').insert({
           id: finalId,
           full_name: data.fullName,
@@ -271,14 +425,22 @@ export async function toggleAdminUserStatusAction(
 
   if (hasSupabase()) {
     try {
-      const supabase = await createServerSupabase();
-      const { error } = await supabase
-        .from('profiles')
-        .update({ status })
-        .eq('id', id);
+      const supabaseAdmin = getSupabaseAdmin();
+      if (supabaseAdmin) {
+        await supabaseAdmin
+          .from('profiles')
+          .update({ status })
+          .eq('id', id);
+      } else {
+        const supabase = await createServerSupabase();
+        const { error } = await supabase
+          .from('profiles')
+          .update({ status })
+          .eq('id', id);
 
-      if (error) {
-        console.warn('toggleAdminUserStatusAction: Aviso no Supabase:', error.message);
+        if (error) {
+          console.warn('toggleAdminUserStatusAction: Aviso no Supabase:', error.message);
+        }
       }
     } catch (err) {
       console.warn('toggleAdminUserStatusAction: Erro no Supabase:', err);
@@ -301,10 +463,16 @@ export async function deleteAdminUserAction(id: string) {
 
   if (hasSupabase()) {
     try {
-      const supabase = await createServerSupabase();
-      const { error } = await supabase.from('profiles').delete().eq('id', id);
-      if (error) {
-        console.warn('deleteAdminUserAction: Aviso no Supabase:', error.message);
+      const supabaseAdmin = getSupabaseAdmin();
+      if (supabaseAdmin) {
+        await supabaseAdmin.from('profiles').delete().eq('id', id);
+        await supabaseAdmin.auth.admin.deleteUser(id);
+      } else {
+        const supabase = await createServerSupabase();
+        const { error } = await supabase.from('profiles').delete().eq('id', id);
+        if (error) {
+          console.warn('deleteAdminUserAction: Aviso no Supabase:', error.message);
+        }
       }
     } catch (err) {
       console.warn('deleteAdminUserAction: Erro no Supabase:', err);
